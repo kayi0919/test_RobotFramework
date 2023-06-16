@@ -1,13 +1,9 @@
 *** Settings ***
 Documentation       Template keyword resource.
 Library         DateTime
-Variables       variables.py
 Library          RPA.Browser.Selenium
 
 *** Keywords ***
-Example keyword
-    Log    Today is ${TODAY}
-
 Get Taiwain Date String
     [Arguments]    ${daydiff}
     ${CUR_DATE}    Get Current Date

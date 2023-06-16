@@ -5,7 +5,6 @@ Library          RPA.Excel.Files
 Resource         keywords.robot
 
 *** Variables ***
-${NIDRS_WEB_URL}    https://localhost:44395/login
 ${test_users}
 ${test_result}    ${False}
 
@@ -38,11 +37,11 @@ Report Search
 Smoke Test Login And Query
     [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
-    Open Available Browser    maximized=${True}    browser_selection=edge
+    Open Available Browser    maximized=${True}    browser_selection=%{BROWSER}
     Read Excel
 
     FOR    ${element}    IN    @{test_users}
-        Login    ${element}    ${NIDRS_WEB_URL}
+        Login    ${element}    %{NIDRS_WEB_URL}
         TRY
             Report Search    ${element}
         EXCEPT

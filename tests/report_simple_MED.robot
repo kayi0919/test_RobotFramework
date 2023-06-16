@@ -10,7 +10,6 @@ Library          OperatingSystem
 Resource         keywords.robot
 
 *** Variables ***
-${NIDRS_WEB_URL}    https://localhost:44395/login
 ${screenshot}
 ${test_users}
 ${test_reports}
@@ -29,7 +28,7 @@ Read Excel
 Login
     [Arguments]    ${element}
     Log To Console    TEST ORG TYPE ${element}[ORG], USER ${element}[User]
-    Go To    ${NIDRS_WEB_URL}
+    Go To    %{NIDRS_WEB_URL}
     Wait Until Element Is Visible    xpath=/html/body/main/div[1]/div[5]/div/div
     Click Element    xpath=/html/body/main/div[1]/div[5]/div/div
     Sleep    200ms
@@ -162,7 +161,7 @@ Smoke Test Report Simple
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
-    Open Available Browser    maximized=${True}    browser_selection=edge
+    Open Available Browser    maximized=${True}    browser_selection=%{BROWSER}
     Read Excel
     #${first_element}=    Get From List    ${test_users}    0
     # 清除截圖路徑
