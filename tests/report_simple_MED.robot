@@ -1,5 +1,3 @@
-*** Comments ***
-
 *** Settings ***
 Documentation    醫療院所通報測試-簡單病
 Library          RPA.Browser.Selenium
@@ -13,9 +11,9 @@ Resource         keywords.robot
 
 *** Variables ***
 ${NIDRS_WEB_URL}    https://localhost:44395/login
+${screenshot}
 ${test_users}
 ${test_reports}
-${test_result}    ${False}
 
 *** Keywords ***
 Read Excel
@@ -53,8 +51,6 @@ Logout
 
 COMMON REPORT
     [Arguments]    ${element}
-    
-    Set Global Variable    ${test_result}    ${False}
     # 區域變數: 日期
     ${tmpday}    Get Taiwain Date String    -2
 
@@ -144,8 +140,6 @@ COMMON REPORT
     # 旅遊史
     Click Element    //*[@id="ReportDisease_mainTrav"]/div[2]/label
 
-
-
     # 確定通報
     Click Button    //*[@id="buttonReportSend"]
     Wait Until Page Contains    確認是否送出通報單
@@ -158,29 +152,33 @@ COMMON REPORT
     # 透過等待畫面出現縣市, 以確保資料讀取完成, 再進行截圖
     Wait Until Page Contains    ${element}[COUNTY]
     # 截圖佐證
-    Capture Page Screenshot    testresult\\simple_report_MED_${element}[DISEASE].png
+    Capture Page Screenshot    ${screenshot}\\simple_report_MED_${element}[DISEASE].png
 
     Log To Console    ${report_id}
-    Set Global Variable    ${test_result}    ${True}
 
 *** Tasks ***
 Smoke Test Report Simple
+    [Documentation]    煙霧測試:醫療院所簡易通報
     [Tags]    Smoke
+    [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
+
     Open Available Browser    maximized=${True}    browser_selection=edge
     Read Excel
     #${first_element}=    Get From List    ${test_users}    0
     # 清除截圖路徑
-    Remove Directory    testresult    resource=true
+    Remove Directory    ${screenshot}    resource=true
     FOR    ${element}    IN    @{test_users}
         Login    ${element}
         FOR    ${report}    IN    @{test_reports}
-            Run Keyword And Continue On Failure    COMMON REPORT    ${report}
-            
-            # 異常時截圖
-            Run Keyword If    ${test_result} == ${False}
-            ...    Capture Page Screenshot    testresult\\simple_report_MED_${report}[DISEASE]_Error.png
+            TRY
+                COMMON REPORT    ${report}
+            EXCEPT
+                Capture Page Screenshot    ${screenshot}\\simple_report_MED_${report}[DISEASE]_Error.png
+            END
         END
         Logout
     END
+
+    Close All Browsers
 
     

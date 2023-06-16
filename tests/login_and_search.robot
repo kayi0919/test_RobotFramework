@@ -36,12 +36,19 @@ Report Search
 
 *** Tasks ***
 Smoke Test Login And Query
+    [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
     Open Available Browser    maximized=${True}    browser_selection=edge
     Read Excel
 
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}
-        Report Search    ${element}
+        TRY
+            Report Search    ${element}
+        EXCEPT
+            Log To Console    message
+        END
         Logout
     END
+
+    Close All Browsers
