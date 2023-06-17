@@ -1,7 +1,7 @@
 *** Settings ***
 Documentation       Template keyword resource.
-Library         DateTime
-Library          RPA.Browser.Selenium
+Library        DateTime
+Library        RPA.Browser.Selenium
 
 *** Keywords ***
 Get Taiwain Date String
@@ -34,13 +34,13 @@ Login
     # 帳號密碼登入
     Click Element    id=card-hover-3
     Sleep    200ms
-    Click Element    id=txt_user_name
-    Press Keys    None    ${element}[User]
-    #Input Text    id=txt_user_name    ${element}[User]
-    #Sleep    100ms
-    Click Element    id=txt_user_password
-    Press Keys    None    ${element}[Password]
-    #Input Text    id=txt_user_password    ${element}[Password]
+    #Click Element    id=txt_user_name
+    #Press Keys    None    ${element}[User]
+    Input Text    id=txt_user_name    ${element}[User]
+    Sleep    100ms
+    #Click Element    id=txt_user_password
+    #Press Keys    None    ${element}[Password]
+    Input Text    id=txt_user_password    ${element}[Password]
     Click Element   xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/button
     Wait Until Page Contains    通報單查詢管理
 

@@ -25,29 +25,6 @@ Read Excel
     Set Global Variable    ${test_users}    ${sheet1}
     Set Global Variable    ${test_reports}    ${sheet2}
 
-Login
-    [Arguments]    ${element}
-    Log To Console    TEST ORG TYPE ${element}[ORG], USER ${element}[User]
-    Go To    %{NIDRS_WEB_URL}
-    Wait Until Element Is Visible    xpath=/html/body/main/div[1]/div[5]/div/div
-    Click Element    xpath=/html/body/main/div[1]/div[5]/div/div
-    Sleep    200ms
-    Log To Console    login
-    Click Element When Visible    xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/div/input[1]
-    Input Text    id=txt_user_name    ${element}[User]
-    Sleep    20ms
-    Input Text    id=txt_user_password    ${element}[Password]
-    Click Element   xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/button
-    Wait Until Page Contains    通報單查詢管理
-
-Logout
-    Click Button    //*[@id="header"]/ul/li[4]/button
-    Wait Until Page Contains    您確定要登出本系統？
-    Sleep    500ms
-    # xpath無效, 改full xpath
-    #Click Button    //*[@id="logoutModal"]/div/div/div[3]/div/button[1]
-    Click Button    xpath=/html/body/div[5]/div/div/div[3]/div/button[1]
-
 COMMON REPORT
     [Arguments]    ${element}
     # 區域變數: 日期
@@ -167,7 +144,7 @@ Smoke Test Report Simple
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
     FOR    ${element}    IN    @{test_users}
-        Login    ${element}
+        Login    ${element}    %{NIDRS_WEB_URL}
         FOR    ${report}    IN    @{test_reports}
             TRY
                 COMMON REPORT    ${report}
