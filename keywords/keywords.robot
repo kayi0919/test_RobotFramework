@@ -34,11 +34,11 @@ Login
     # 帳號密碼登入
     Click Element    id=card-hover-3
     Sleep    200ms
-    #Click Element    id=txt_user_name
+    Click Element    id=txt_user_name
     #Press Keys    None    ${element}[User]
     Input Text    id=txt_user_name    ${element}[User]
     Sleep    100ms
-    #Click Element    id=txt_user_password
+    Click Element    id=txt_user_password
     #Press Keys    None    ${element}[Password]
     Input Text    id=txt_user_password    ${element}[Password]
     Click Element   xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/button
@@ -47,6 +47,17 @@ Login
 Logout
     Click Button    //*[@id="header"]/ul/li[4]/button
     Wait Until Page Contains    您確定要登出本系統？
-    Sleep    100ms
+    Sleep    200ms
     # xpath無效, 改full xpath
     Click Button    xpath=/html/body/div[5]/div/div/div[3]/div/button[1]
+
+Clear Error
+    Sleep    200ms
+    # 如果有錯誤 關掉dialog
+    ${checkdata}    Does Page Contain Element    //div[@id="alertDialog"]
+    Run Keyword If    ${checkdata} == ${True}    
+    ...    Click Element    //*[@id="alertDialog"]/div/div/div[3]/div/a
+    
+    # 滾回頂端
+    Scroll Element Into View    //*[@id="child-item"]/li[1]/a
+        

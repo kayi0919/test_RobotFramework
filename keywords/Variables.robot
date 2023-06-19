@@ -1,0 +1,3 @@
+*** Variables ***
+${NIDRS_WEB_URL}    https://localhost:44395/login
+${BROWSER}    edge

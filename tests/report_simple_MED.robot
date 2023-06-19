@@ -8,11 +8,13 @@ Library          RPA.Robocorp.WorkItems
 Library          String
 Library          OperatingSystem
 Resource         keywords.robot
+Resource         Variables.robot
 
 *** Variables ***
 ${screenshot}
 ${test_users}
 ${test_reports}
+${item_result}
 
 *** Keywords ***
 Read Excel
@@ -29,6 +31,8 @@ COMMON REPORT
     [Arguments]    ${element}
     # 區域變數: 日期
     ${tmpday}    Get Taiwain Date String    -2
+    
+    Set Global Variable    ${item_result}    ${False}
 
     Sleep    100ms
     Log To Console    點擊新增通報單
@@ -67,7 +71,7 @@ COMMON REPORT
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
     Click Button    //*[@id="choose_diseases"]
     Wait Until Page Contains    依法定傳染病
-    Sleep    100ms
+    Sleep    200ms
     Click Element    //*[@id="nav-category-${element}[DISEASE_CATEGORY]"]
     Sleep    100ms
     Click Element    //label[@for="category_disease_${element}[DISEASE]"]
@@ -121,6 +125,7 @@ COMMON REPORT
     Wait Until Page Contains    確認是否送出通報單
     Sleep    200ms
     Click Button    //*[@id="_dialog"]/div/div/div[3]/div[1]/button
+    Sleep    100ms
     
     # 通報完成頁
     Wait Until Page Contains    法定傳染病個案通報完成
@@ -132,29 +137,39 @@ COMMON REPORT
 
     Log To Console    ${report_id}
 
+    Set Global Variable    ${item_result}    ${True}
+
 *** Tasks ***
 Smoke Test Report Simple
     [Documentation]    煙霧測試:醫療院所簡易通報
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
-    Open Available Browser    maximized=${True}    browser_selection=%{BROWSER}
+    Open Available Browser    maximized=${True}    browser_selection=${BROWSER}    
     Read Excel
     #${first_element}=    Get From List    ${test_users}    0
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
     FOR    ${element}    IN    @{test_users}
-        Login    ${element}    %{NIDRS_WEB_URL}
+        Login    ${element}    ${NIDRS_WEB_URL}
         FOR    ${report}    IN    @{test_reports}
-            TRY
-                COMMON REPORT    ${report}
-            EXCEPT
-                Capture Page Screenshot    ${screenshot}\\simple_report_MED_${report}[DISEASE]_Error.png
-            END
+            Run Keyword And Continue On Failure    COMMON REPORT    ${report}
+
+            Run Keyword If    ${item_result} == ${False}
+            ...    Capture Page Screenshot    ${screenshot}\\simple_report_MED_${report}[DISEASE]_Error.png
+
+            #TRY
+            #    COMMON REPORT    ${report}
+            #EXCEPT
+            #    Capture Page Screenshot    ${screenshot}\\simple_report_MED_${report}[DISEASE]_Error.png
+            #END
+
+            Clear Error
         END
-        Logout
+        Run Keyword And Ignore Error    Logout
+        #Logout
     END
 
-    Close All Browsers
+    [Teardown]    Close All Browsers
 
     

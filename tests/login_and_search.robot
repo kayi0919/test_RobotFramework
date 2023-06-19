@@ -3,6 +3,7 @@ Documentation    登入 & 快速查詢測試
 Library          RPA.Browser.Selenium
 Library          RPA.Excel.Files
 Resource         keywords.robot
+Resource         Variables.robot
 
 *** Variables ***
 ${test_users}
@@ -26,7 +27,7 @@ Report Search
     Sleep    500ms
     # 點擊查詢
     Click Button    id=btn_query
-    Sleep    1000ms
+    Sleep    2000ms
     # 驗證資料?
     # 處理查無資料
     ${element_exists}    Run Keyword And Return Status    Page Should Contain Element    xpath=/html/body/div[8]/div/div/div[3]
@@ -37,11 +38,11 @@ Report Search
 Smoke Test Login And Query
     [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
-    Open Available Browser    maximized=${True}    browser_selection=%{BROWSER}
+    Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Read Excel
 
     FOR    ${element}    IN    @{test_users}
-        Login    ${element}    %{NIDRS_WEB_URL}
+        Login    ${element}    ${NIDRS_WEB_URL}
         TRY
             Report Search    ${element}
         EXCEPT
@@ -50,4 +51,5 @@ Smoke Test Login And Query
         Logout
     END
 
-    Close All Browsers
+    [Teardown]    Close All Browsers
+    
