@@ -1,0 +1,175 @@
+{
+  "REPORT": {
+      "REPORT": [
+          {
+              "FIELD": "ID",
+              "VALUE": "S109371400001"
+          },
+          {
+              "FIELD": "HOSPITAL",
+              "VALUE": "9917070001"
+          },
+          {
+              "FIELD": "HOSPITAL_NAME",
+              "VALUE": "中區管制中心"
+          },
+          {
+              "FIELD": "HOSPITAL_ADDRESS",
+              "VALUE": "臺中市南屯區文心南三路20號"
+          },
+          {
+              "FIELD": "HOSPITAL_CONTACT",
+              "VALUE": "04-24739940"
+          },
+          {
+              "FIELD": "DIAGNOSTICIAN",
+              "VALUE": "臺南機場檢疫站"
+          },
+          {
+              "FIELD": "REPORTER_NAME",
+              "VALUE": "TEST_SW2"
+          },
+          {
+              "FIELD": "IDNO",
+              "VALUE": "U123456789"
+          },
+          {
+              "FIELD": "NAME",
+              "VALUE": "大美人"
+          },
+          {
+              "FIELD": "GENDER",
+              "VALUE": "F"
+          },
+          {
+              "FIELD": "BIRTHDAY",
+              "VALUE": "1978-11-24"
+          },
+          {
+              "FIELD": "CITIZEN",
+              "VALUE": "0"
+          },
+          {
+              "FIELD": "NATIONALITY",
+              "VALUE": "OTH"
+          },
+          {
+              "FIELD": "RESIDENCE_COUNTY",
+              "VALUE": "10007"
+          },
+          {
+              "FIELD": "RESIDENCE_TOWN",
+              "VALUE": "10007090"
+          },
+          {
+              "FIELD": "RESIDENCE_VILLAGE",
+              "VALUE": null
+          },
+          {
+              "FIELD": "ADDRESS",
+              "VALUE": "美女路美女街123號"
+          },
+          {
+              "FIELD": "DEATH",
+              "VALUE": false
+          }
+      ],
+      "TRAVEL": [
+          {
+              "ITEMS": [
+                  {
+                      "FIELD": "TRAVEL_TYPE",
+                      "VALUE": "1"
+                  },
+                  {
+                      "FIELD": "TRAVEL_AREA",
+                      "VALUE": "3"
+                  },
+                  {
+                      "FIELD": "TRAVEL_DATE_FROM",
+                      "VALUE": "2020-11-10T00:00:00"
+                  },
+                  {
+                      "FIELD": "TRAVEL_DATE_TO",
+                      "VALUE": "2020-11-24T00:00:00"
+                  }
+              ]
+          }
+      ],
+      "CONTACT_INFO": [
+          {
+              "ITEMS": [
+                  {
+                      "FIELD": "CONTACT_TYPE",
+                      "VALUE": 1
+                  },
+                  {
+                      "FIELD": "CONTACT_VALUE",
+                      "VALUE": "0911123456"
+                  }
+              ]
+          }
+      ]
+  },
+  "DISEASE": [
+      {
+          "DISEASE_ID": "061",
+          "DISEASE_SYMPTOM": [
+              133
+          ],
+          "DISEASE_SYMPTOM_OTHER": null,
+          "DISEASE_FIELD": [
+              {
+                  "FIELD": "S_QN061000A0_AN061000A1",
+                  "Value": "1"
+              }
+          ],
+          "SAMPLE": [
+              {
+                  "ITEMS": [
+                      {
+                          "FIELD": "REPORT_ID",
+                          "Value": "S109371400001"
+                      },
+                      {
+                          "FIELD": "DISEASE_ID",
+                          "Value": "061"
+                      },
+                      {
+                          "FIELD": "SAMPLE_ID",
+                          "Value": "04-105-970007"
+                      },
+                      {
+                          "FIELD": "SAMPLE_TYPE",
+                          "Value": "0"
+                      },
+                      {
+                          "FIELD": "SAMPLE_DATE",
+                          "Value": "2020-11-24T08:38:14.660"
+                      },
+                      {
+                          "FIELD": "SAMPLE_TIMES",
+                          "Value": 1
+                      },
+                      {
+                          "FIELD": "RECEIVED_UNIT_TYPE",
+                          "Value": 1
+                      },
+                      {
+                          "FIELD": "RECEIVED_UNIT",
+                          "Value": "22"
+                      },
+                      {
+                          "FIELD": "CREATE_DATE",
+                          "Value": "2020-11-24T15:46:39.280"
+                      },
+                      {
+                          "FIELD": "STATUS",
+                          "Value": "1"
+                      }
+                  ]
+              }
+          ]
+      }
+  ]
+}

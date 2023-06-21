@@ -1,0 +1,228 @@
+{
+	"REPORT": {
+		"REPORT": [
+			{
+				"FIELD": "HOSPITAL",
+				"VALUE": "1131100010",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "HOSPITAL_NANE",
+				"VALUE": "台灣基督長老教會馬偕醫療財團法人淡水馬偕紀念醫院",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "HOSPITAL_ADDRESS",
+				"VALUE": "民生路45號",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "HOSPITAL_CONTACT",
+				"VALUE": "02-28094661",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "IDNO",
+				"VALUE": "T0302CVS01",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "NAME",
+				"VALUE": "煙霧測試_API_0302_19CVS",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "GENDER",
+				"VALUE": "F",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "BIRTHDAY",
+				"VALUE": "1951-08-08 00:00:00",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "RESIDENCE_COUNTY",
+				"VALUE": "65000",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "RESIDENCE_TOWN",
+				"VALUE": "65000100",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "RESIDENCE_VILLAGE",
+				"VALUE": null,
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "ADDRESS",
+				"VALUE": null,
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "DISEASE",
+				"VALUE": "19CVS",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "SICK_DAY",
+				"VALUE": "2023-05-05 00:00:00",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "DIAGNOSE_DAY",
+				"VALUE": "2023-05-05 00:00:00",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "PHB_RECEIVED_DAY",
+				"VALUE": null,
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "HAS_SYMPTOM",
+				"VALUE": "",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "HAS_ANIMAL_HISTORY",
+				"VALUE": "0",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "HAS_TRAVEL_HISTORY",
+				"VALUE": "0",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "OCCUPATION",
+				"VALUE": null,
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "CITIZEN",
+				"VALUE": "0",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "NATIONALITY",
+				"VALUE": "158",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "NATIONALITY_OTHER",
+				"VALUE": null,
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "REPORTER_NAME",
+				"VALUE": "王ＯＯ",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "CREATE_USER",
+				"VALUE": "王ＯＯ",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "CREATE_DATE",
+				"VALUE": "2023-05-19 18:55:10",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "REPORTED_DAY",
+				"VALUE": "2023-05-19 18:59:07",
+				"SORT_ORDER": null
+			},
+			{
+				"FIELD": "NOTE",
+				"VALUE": null,
+				"SORT_ORDER": null
+			}
+		],
+		"CONTACT_INFO": [],
+		"TRAVEL": [],
+		"ANIMAL": []
+	},
+	"DISEASE": [
+		{
+			"DISEASE_ID": "19CVS",
+			"DISEASE_SYMPTOM": null,
+			"DISEASE_SYMPTOM_OTHER": null,
+			"DISEASE_FIELD": null,
+			"SAMPLE": [
+				{
+					"ITEMS": [
+						{
+							"FIELD": "DISEASE_ID",
+							"VALUE": "19CVS",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "SAMPLE_ID",
+							"VALUE": "112242017000189",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "SAMPLE_TYPE",
+							"VALUE": "17",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "SAMPLE_DATE",
+							"VALUE": "2023-05-05 00:00:00",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "SAMPLE_CREATE_DATE",
+							"VALUE": "2023-05-19 18:55:10",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "SAMPLE_TIMES",
+							"VALUE": "1",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "SAMPLING_HOSPITAL",
+							"VALUE": "1131100010",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "REQUESTER",
+							"VALUE": "王ＯＯ",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "RECEIVED_UNIT_TYPE",
+							"VALUE": "6",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "RECEIVED_UNIT",
+							"VALUE": "098043",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "CREATE_DATE",
+							"VALUE": "2023-05-19 18:55:10",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "STATUS",
+							"VALUE": "",
+							"SORT_ORDER": null
+						},
+						{
+							"FIELD": "REPORT_ID",
+							"VALUE": null,
+							"SORT_ORDER": null
+						}
+					]
+				}
+			]
+		}
+	]
+}

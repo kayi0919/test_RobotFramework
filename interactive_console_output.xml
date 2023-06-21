@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 5.0.1 (Python 3.9.13 on win32)" generated="20230621 14:37:45.733" rpa="false" schemaversion="3">
+<suite id="s1" name="Robot Interactive Console" source="c:\Users\Howard\.vscode\extensions\robocorp.robotframework-lsp-1.11.0\src\robotframework_ls\vendored\robotframework_interactive\robot_interactive_console.robot">
+<test id="s1-t1" name="Default Task/Test" line="5">
+<kw name="Interpreter Main Loop" library="MainLoop">
+<kw name="Load JSON from file">
+<var>${jsonfile}</var>
+<arg>testNIDRSAPI\\IDA_0302_061_SQMS.json</arg>
+<msg timestamp="20230621 14:37:46.539" level="FAIL">No keyword with name 'Load JSON from file' found.</msg>
+<status status="FAIL" starttime="20230621 14:37:46.538" endtime="20230621 14:37:46.539"/>
+</kw>
+<kw name="NIDRS API Request">
+<var>${response}</var>
+<arg>/api/IDA_0302</arg>
+<arg>${jsonfile}</arg>
+<status status="NOT RUN" starttime="20230621 14:37:46.541" endtime="20230621 14:37:46.541"/>
+</kw>
+<kw name="Status Should Be">
+<arg>OK</arg>
+<arg>${response}</arg>
+<status status="NOT RUN" starttime="20230621 14:37:46.543" endtime="20230621 14:37:46.543"/>
+</kw>
+<kw name="Set Variable" library="BuiltIn">
+<var>${json}</var>
+<arg>${response.json()}</arg>
+<doc>Returns the given values which can then be assigned to a variables.</doc>
+<status status="NOT RUN" starttime="20230621 14:37:46.543" endtime="20230621 14:37:46.543"/>
+</kw>
+<kw name="Set To Dictionary">
+<arg>${reports}</arg>
+<arg>${json["REPORT"][0]["REPORT_ID"]}</arg>
+<arg>${json["REPORT"][0]["DISEASE_ID"]}</arg>
+<status status="NOT RUN" starttime="20230621 14:37:46.544" endtime="20230621 14:37:46.544"/>
+</kw>
+<kw name="Log To Console" library="BuiltIn">
+<arg>Create Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}</arg>
+<doc>Logs the given message to the console.</doc>
+<status status="NOT RUN" starttime="20230621 14:37:46.545" endtime="20230621 14:37:46.545"/>
+</kw>
+<status status="PASS" starttime="20230621 14:37:45.769" endtime="20230621 14:37:50.748"/>
+</kw>
+<status status="PASS" starttime="20230621 14:37:45.768" endtime="20230621 14:37:50.749"/>
+</test>
+<status status="PASS" starttime="20230621 14:37:45.735" endtime="20230621 14:37:50.750"/>
+</suite>
+<statistics>
+<total>
+<stat pass="1" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="1" fail="0" skip="0" id="s1" name="Robot Interactive Console">Robot Interactive Console</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>

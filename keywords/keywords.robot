@@ -4,6 +4,24 @@ Library        DateTime
 Library        RPA.Browser.Selenium
 
 *** Keywords ***
+Get Date String
+    [Arguments]    ${daydiff}
+    ${CUR_DATE}    Get Current Date
+    IF    $daydiff != 0
+        ${CUR_DATE}    Add Time To Date    ${CUR_DATE}    ${daydiff} days    #result_format=%Y-%m-%d
+    END
+    ${datestring}    Convert Date    ${CUR_DATE}    result_format=%Y-%m-%d
+    [Return]    ${datestring}
+    
+Get DateTime String
+    [Arguments]    ${daydiff}
+    ${CUR_DATE}    Get Current Date
+    IF    $daydiff != 0
+        ${CUR_DATE}    Add Time To Date    ${CUR_DATE}    ${daydiff} hours    #result_format=%Y-%m-%d
+    END
+    ${datestring}    Convert Date    ${CUR_DATE}    result_format=%Y-%m-%d %H:%M:%S
+    [Return]    ${datestring}
+
 Get Taiwain Date String
     [Arguments]    ${daydiff}
     ${CUR_DATE}    Get Current Date

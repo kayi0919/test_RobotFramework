@@ -1,0 +1,216 @@
+{
+    "REPORT": {
+        "REPORT": [
+            {
+                "FIELD": "ID",
+                "VALUE": "Q112030700069",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "HOSPITAL",
+                "VALUE": "9932020001",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "HOSPITAL_NAME",
+                "VALUE": "北區管制中心",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "HOSPITAL_ADDRESS",
+                "VALUE": "桃園市大園區航勤北路22號",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "HOSPITAL_CONTACT",
+                "VALUE": "03-3982583",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "DIAGNOSTICIAN",
+                "VALUE": "桃園機場檢疫站C",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "REPORTER_NAME",
+                "VALUE": "謝ｏｏ",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "IDNO",
+                "VALUE": "T030206101",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "NAME",
+                "VALUE": "煙霧測試_API_0302_061",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "GENDER",
+                "VALUE": "F",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "BIRTHDAY",
+                "VALUE": "1983-06-18",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "CITIZEN",
+                "VALUE": "0",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "NATIONALITY",
+                "VALUE": "158",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "RESIDENCE_COUNTY",
+                "VALUE": "66000",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "RESIDENCE_TOWN",
+                "VALUE": "66000150",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "RESIDENCE_VILLAGE",
+                "VALUE": null,
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "ADDRESS",
+                "VALUE": "煙霧路測試巷0302弄",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "DEATH",
+                "VALUE": "false",
+                "SORT_ORDER": null
+            },
+            {
+                "FIELD": "HAS_TRAVEL_HISTORY",
+                "VALUE": "true",
+                "SORT_ORDER": null
+            }
+        ],
+        "CONTACT_INFO": [
+            {
+                "ITEMS": [
+                    {
+                        "FIELD": "CONTACT_TYPE",
+                        "VALUE": "1",
+                        "SORT_ORDER": null
+                    },
+                    {
+                        "FIELD": "CONTACT_VALUE",
+                        "VALUE": "00000000",
+                        "SORT_ORDER": null
+                    }
+                ]
+            }
+        ],
+        "TRAVEL": [
+            {
+                "ITEMS": [
+                    {
+                        "FIELD": "TRAVEL_TYPE",
+                        "VALUE": "1",
+                        "SORT_ORDER": null
+                    },
+                    {
+                        "FIELD": "TRAVEL_AREA",
+                        "VALUE": "764",
+                        "SORT_ORDER": null
+                    },
+                    {
+                        "FIELD": "TRAVEL_DATE_FROM",
+                        "VALUE": "2023-06-03T00:00:00",
+                        "SORT_ORDER": null
+                    },
+                    {
+                        "FIELD": "TRAVEL_DATE_TO",
+                        "VALUE": "2023-06-10T00:00:00",
+                        "SORT_ORDER": null
+                    }
+                ]
+            }
+        ],
+        "ANIMAL": null
+    },
+    "DISEASE": [
+        {
+            "DISEASE_ID": "061",
+            "DISEASE_SYMPTOM": [
+                133
+            ],
+            "DISEASE_SYMPTOM_OTHER": null,
+            "DISEASE_FIELD": [
+                {
+                    "FIELD": "S_QN061000a0_AN061000a2",
+                    "VALUE": "1",
+                    "SORT_ORDER": null
+                }
+            ],
+            "SAMPLE": [
+                {
+                    "ITEMS": [
+                        {
+                            "FIELD": "REPORT_ID",
+                            "VALUE": "Q112030700069",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "DISEASE_ID",
+                            "VALUE": "061",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "SAMPLE_ID",
+                            "VALUE": "06-110-216863",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "SAMPLE_TYPE",
+                            "VALUE": "0",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "SAMPLE_DATE",
+                            "VALUE": "2023-06-10T20:10:26.520",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "SAMPLE_TIMES",
+                            "VALUE": "1",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "RECEIVED_UNIT_TYPE",
+                            "VALUE": "1",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "RECEIVED_UNIT",
+                            "VALUE": "22",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "CREATE_DATE",
+                            "VALUE": "2023-06-10T20:13:45.497",
+                            "SORT_ORDER": null
+                        },
+                        {
+                            "FIELD": "STATUS",
+                            "VALUE": "1",
+                            "SORT_ORDER": null
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "DISEASE_ID": [
+        "055",
+        "056",
+        "19CoV",
+        "NFluA",
+        "061",
+        "MPXV"
+    ],
+    "REPORT_ID": null,
+    "INDIVIDUAL_IDNO": null,
+    "QUERY_DATE_TYPE": 2,
+    "START": "2023-06-21T13:44:45+08:00",
+    "END": "2023-06-21T13:44:50+08:00"
+}
