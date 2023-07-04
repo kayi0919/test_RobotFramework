@@ -1,0 +1,64 @@
+{
+    "REPORT_ID": "",
+	"REPORT": {
+		"REPORT": [
+			{
+				"FIELD": "IDNO",
+				"VALUE": "ROBOTTEST"
+			},
+			{
+				"FIELD": "NAME",
+				"VALUE": "煙霧測試_API_0312"
+			},
+			{
+				"FIELD": "ADDRESS",
+				"VALUE": "SOMEWHERE"
+			},
+			{
+				"FIELD": "GENDER",
+				"VALUE": "M"
+			},
+			{
+				"FIELD": "BIRTHDAY",
+				"VALUE": "1988-01-01"
+			},
+			{
+				"FIELD": "CITIZEN",
+				"VALUE": 1
+			},
+			{
+				"FIELD": "NATIONALITY",
+				"VALUE": "710"
+			},
+			{
+				"FIELD": "DEATH",
+				"VALUE": 1
+			},
+			{
+				"FIELD": "DEATH_DAY",
+				"VALUE": "2022-01-01"
+			},
+			{
+				"FIELD": "DEATH_REASON_A",
+				"VALUE": "A"
+			},
+			{
+				"FIELD": "DEATH_REASON_B",
+				"VALUE": "B"
+			},
+			{
+				"FIELD": "DEATH_REASON_C",
+				"VALUE": "C"
+			},
+			{
+				"FIELD": "DEATH_REASON_D",
+				"VALUE": "D"
+			}
+		]
+	},
+	"DISEASE": [
+		{
+			"DISEASE_ID": ""
+		}
+	]
+}

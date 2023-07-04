@@ -19,7 +19,7 @@ ${reports}
 *** Keywords ***
 API TEST Setup
     Create Session    nidrsapi    ${baseurl}    verify=False
-    ${output}   Read file  testNIDRSAPI\\token
+    ${output}   Read file  testNIDRSAPI\\token_LIMS
     Set Global Variable    ${token}    ${output}
     ${reports}    Create Dictionary
     Set Global Variable    ${reports}
@@ -238,6 +238,34 @@ TEST API 0309
 
     ${response}    NIDRS API Request    /api/IDA_0309   ${jsonfile}
     Status Should Be    OK    ${response}
+    # 補強檢查查詢通報單是否關聯
+
+TEST API 0312
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0312    法傳通報單修改(HAS)
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0312_HAS.json
+
+    ${report_ids}    Get Dictionary Keys    ${reports} 
+    
+    ${last_report_id}    Get From List    ${report_ids}    -1
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_ID    ${last_report_id}
+    ${last_disease_id}    Get From Dictionary    ${reports}     ${last_report_id}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.DISEASE[0].DISEASE_ID    ${last_disease_id}
+
+    ${response}    NIDRS API Request    /api/IDA_0312   ${jsonfile}
+    Status Should Be    401    ${response}
+
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_HAS
+    Set Global Variable    ${token}    ${output}
+
+    ${response}    NIDRS API Request    /api/IDA_0312   ${jsonfile}
+    Status Should Be    OK    ${response}
+
+    # 回復token
+    Set Global Variable    ${token}    ${lims_Token}
+
     # 補強檢查查詢通報單是否關聯
 
 #TEST CLEAN UP REPORT
