@@ -6,7 +6,8 @@ Library    RPA.FileSystem
 Library    RPA.Windows
 Library    RPA.Robocorp.WorkItems
 Resource    db_handle.robot
-Resource    ../keywords/keywords.robot
+Resource         keywords.robot
+#Resource    ../keywords/keywords.robot
 Suite Setup    API TEST Setup
 Suite Teardown    API TEST Teardown
 
@@ -37,7 +38,7 @@ NIDRS API Request
     ${response}    POST On Session    nidrsapi    ${apiuri}    json=${json}    headers=${headers}    expected_status=anything
     [Return]    ${response}
 
-*** Test Cases ***
+*** Tasks ***
 TEST API 0101
     [Tags]    Smoke    API
     [Documentation]    測試NDIRS API: IDA_0101    帳號地區/疾病查詢
@@ -60,7 +61,7 @@ TEST API 0302
     Status Should Be    OK    ${response}
     ${json}    Set Variable    ${response.json()}
     Set To Dictionary    ${reports}    ${json["REPORT"][0]["REPORT_ID"]}    ${json["REPORT"][0]["DISEASE_ID"]}
-    Log To Console    Create Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}
+    Log To Console    Created Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}
 
 TEST API 0302 LIMS 19CVS
     [Tags]    Smoke    API
@@ -70,7 +71,7 @@ TEST API 0302 LIMS 19CVS
     Status Should Be    OK    ${response}
     ${json}    Set Variable    ${response.json()}
     Set To Dictionary    ${reports}    ${json["REPORT"][0]["REPORT_ID"]}    ${json["REPORT"][0]["DISEASE_ID"]}
-    Log To Console    Create Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}
+    Log To Console    Created Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}
 
 TEST API 0302 SQMS 061
     [Tags]    Smoke    API
@@ -80,11 +81,11 @@ TEST API 0302 SQMS 061
     Status Should Be    OK    ${response}
     ${json}    Set Variable    ${response.json()}
     Set To Dictionary    ${reports}    ${json["REPORT"][0]["REPORT_ID"]}    ${json["REPORT"][0]["DISEASE_ID"]}
-    Log To Console    Create Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}
+    Log To Console    Created Reprot ID: ${json["REPORT"][0]["REPORT_ID"]}, Disease: ${json["REPORT"][0]["DISEASE_ID"]}
 
 TEST API 0303 QINV
     [Tags]    Smoke    API
-    [Documentation]    測試NDIRS API: IDA_0303    法傳通報單查詢
+    [Documentation]    測試NDIRS API: IDA_0303    法傳通報單查詢(QINV)
     ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0303_QINV.json
     #變更JSON查詢內容
     # list是python的函式
@@ -105,14 +106,15 @@ TEST API 0303 QINV
 
 TEST API 0303 TRACE
     [Tags]    Smoke    API
-    [Documentation]    測試NDIRS API: IDA_0303    法傳通報單查詢
+    [Documentation]    測試NDIRS API: IDA_0303    法傳通報單查詢(TRACE)
     ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0303_TRACE.json
     # 變更JSON查詢內容
     FOR    ${report}    ${disease}    IN    &{reports}
         Append To List    ${jsonfile["DISEASE_ID"]}    ${disease}
     END
     ${startdate}    Get DateTime String    -1
-    ${enddate}    Get DateTime String    0
+    # 放寬 避免時間未同步問題
+    ${enddate}    Get DateTime String    1
     
     ${jsonfile}    Update value to JSON    ${jsonfile}    $.START    ${startdate}
     ${jsonfile}    Update value to JSON    ${jsonfile}    $.END    ${enddate}
@@ -125,11 +127,119 @@ TEST API 0303 TRACE
     ${expLength}    Get Length    ${reports}
     Should Be True    ${json["COUNT"]} >= ${expLength}
     # 通報單號應包含
-    ${id_list}    Evaluate    [item['REPORT_ID'] for item in ${json['REPORT']}]    json
+    ${report_list}    Evaluate    [item['REPORT_ID'] for item in ${json['REPORT']}]    json
     FOR    ${report}    ${disease}    IN    &{reports}
-        List Should Contain Value    ${id_list}    ${report}
+        List Should Contain Value    ${report_list}    ${report}
     END
     
+TEST API 0304
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0304    通報單-送驗單關聯
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0304.json
+
+    # 取得最後一筆通報單, 掛此送驗單
+    ${report_ids}    Get Dictionary Keys    ${reports} 
+    ${last_report_id}    Get From List    ${report_ids}    -1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_ID    ${last_report_id}
+
+    ${response}    NIDRS API Request    /api/IDA_0304   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 補強檢查查詢通報單是否關聯
+    
+TEST API 0305 SQMS
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0305    法傳通報單-研判結果的設定與查詢(SQMS)
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0305_SQMS.json
+
+    # 變更JSON查詢內容
+    FOR    ${report}    ${disease}    IN    &{reports}
+        Append To List    ${jsonfile["REPORT_ID"]}    ${report}
+    END
+
+    ${response}    NIDRS API Request    /api/IDA_0305   ${jsonfile}
+    Status Should Be    OK    ${response}
+    ${json}    Set Variable    ${response.json()}
+    # 簡單內容檢查
+    # 通報單號應包含
+    ${report_list}    Evaluate    [item['REPORT_ID'] for item in ${json['REPORT_DETERMINED_RESULT']}]    json
+    FOR    ${report}    ${disease}    IN    &{reports}
+        List Should Contain Value    ${report_list}    ${report}
+    END
+
+TEST API 0305 TRACE
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0305    法傳通報單-研判結果的設定與查詢(TRACE)
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0305_TRACE.json
+
+    ${startdate}    Get DateTime String    -1
+    # 放寬 避免時間未同步問題
+    ${enddate}    Get DateTime String    1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.MODIFIED.START    ${startdate}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.MODIFIED.END    ${enddate}
+
+    ${response}    NIDRS API Request    /api/IDA_0305   ${jsonfile}
+    Status Should Be    OK    ${response}
+    ${json}    Set Variable    ${response.json()}
+    # 簡單內容檢查
+    # 通報單號應包含
+    ${report_list}    Evaluate    [item['REPORT_ID'] for item in ${json['REPORT_DETERMINED_RESULT']}]    json
+    FOR    ${report}    ${disease}    IN    &{reports}
+        List Should Contain Value    ${report_list}    ${report}
+    END
+
+TEST API 0306 QINV
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0306    法傳通報單轉介查詢(QINV)
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0306_QINV.json
+
+    ${startdate}    Get DateTime String    -1
+    # 放寬 避免時間未同步問題
+    ${enddate}    Get DateTime String    1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.CREATED.START    ${startdate}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.CREATED.END    ${enddate}
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.MODIFIED.START    ${startdate}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.MODIFIED.END    ${enddate}
+
+    ${response}    NIDRS API Request    /api/IDA_0306   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 補強檢查查詢通報單是否關聯
+
+TEST API 0308
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0308    主子單
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0308.json
+
+    ${startdate}    Get DateTime String    -1
+    # 放寬 避免時間未同步問題
+    ${enddate}    Get DateTime String    1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.MODIFIED.START    ${startdate}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.MODIFIED.END    ${enddate}
+
+    ${response}    NIDRS API Request    /api/IDA_0308   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 補強檢查查詢通報單是否關聯
+
+TEST API 0309
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0309    流行案例
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0309.json
+
+    ${startdate}    Get DateTime String    -1
+    # 放寬 避免時間未同步問題
+    ${enddate}    Get DateTime String    1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.START    ${startdate}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.END    ${enddate}
+
+    ${response}    NIDRS API Request    /api/IDA_0309   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 補強檢查查詢通報單是否關聯
+
 #TEST CLEAN UP REPORT
 #    Clean up Report    ${reportid}    ${diseaseid}
 

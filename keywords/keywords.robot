@@ -14,10 +14,10 @@ Get Date String
     [Return]    ${datestring}
     
 Get DateTime String
-    [Arguments]    ${daydiff}
+    [Arguments]    ${hourdiff}
     ${CUR_DATE}    Get Current Date
-    IF    $daydiff != 0
-        ${CUR_DATE}    Add Time To Date    ${CUR_DATE}    ${daydiff} hours    #result_format=%Y-%m-%d
+    IF    $hourdiff != 0
+        ${CUR_DATE}    Add Time To Date    ${CUR_DATE}    ${hourdiff} hours    #result_format=%Y-%m-%d
     END
     ${datestring}    Convert Date    ${CUR_DATE}    result_format=%Y-%m-%d %H:%M:%S
     [Return]    ${datestring}

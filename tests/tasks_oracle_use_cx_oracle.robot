@@ -18,7 +18,7 @@ ${DB_NAME}       ORCLCDB
 ${DB_USERNAME}   smartida
 ${DB_PASSWORD}   oracle
 
-*** Test Cases ***
+*** Tasks ***
 Connect to Oracle Database
     Connect To Database    cx_Oracle    database=${DB_NAME}    username=${DB_USERNAME}    password=${DB_PASSWORD}    host=${DB_HOST}    port=${DB_PORT}
     ${animals}    Query    Select * FROM animal

@@ -18,11 +18,11 @@ ${DB_NAME}       ORCLCDB
 ${DB_USERNAME}   smartida
 ${DB_PASSWORD}   oracle
 
-*** Tasks ***
-Get Orders From Database
-    Connect To Database    oracledb    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_HOST}    ${DB_PORT}
-    ${animals}    Query    Select * FROM animal
-    FOR    ${animal}    IN    @{animals}
-        Log To Console    ${animal}[ID] - ${animal}[NAME]
-    END
-    [Teardown]    Disconnect From Database
+#*** Tasks ***
+#Get Orders From Database
+#    Connect To Database    oracledb    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_HOST}    ${DB_PORT}
+#    ${animals}    Query    Select * FROM animal
+#    FOR    ${animal}    IN    @{animals}
+#        Log To Console    ${animal}[ID] - ${animal}[NAME]
+#    END
+#    [Teardown]    Disconnect From Database
