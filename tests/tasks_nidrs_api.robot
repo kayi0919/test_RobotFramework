@@ -15,6 +15,7 @@ Suite Teardown    API TEST Teardown
 ${baseurl}    https://localhost:44334
 ${token}
 ${reports}
+${cluster}
 
 *** Keywords ***
 API TEST Setup
@@ -265,8 +266,51 @@ TEST API 0312
 
     # 回復token
     Set Global Variable    ${token}    ${lims_Token}
-
     # 補強檢查查詢通報單是否關聯
+
+
+TEST API 0351
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0351    群聚事件新增
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0351.json
+
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_SQMS
+
+    ${response}    NIDRS API Request    /api/IDA_0351   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 取得群聚編號
+    ${json}    Set Variable    ${response.json()}
+    Set Global Variable    ${cluster}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
+
+TEST API 0352
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0352    群聚個案新增
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0352.json
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.ADD_CLUSTER_INDIVIDUALS.CLUSTER_ID    ${cluster}
+
+    ${response}    NIDRS API Request    /api/IDA_0352   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 進一步檢查
+    
+TEST API 0353
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0353    群聚個案查詢
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0353.json
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.CLUSTER_REPORT_ID[0]    ${cluster}
+
+    ${response}    NIDRS API Request    /api/IDA_0353   ${jsonfile}
+    Status Should Be    OK    ${response}
+    ${json}    Set Variable    ${response.json()}
+    # 簡單內容檢查
+    # 通報單號應包含
+    ${cluster_list}    Evaluate    [item['CLUSTER_ID'] for item in ${json['CLUSTER_REPORTS']}]    json
+    
+    List Should Contain Value    ${cluster_list}    ${cluster}
+
 
 #TEST CLEAN UP REPORT
 #    Clean up Report    ${reportid}    ${diseaseid}
