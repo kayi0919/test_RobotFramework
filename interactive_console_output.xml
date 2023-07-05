@@ -1,48 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<robot generator="Robot 5.0.1 (Python 3.9.13 on win32)" generated="20230704 15:40:47.636" rpa="false" schemaversion="3">
-<suite id="s1" name="Robot Interactive Console" source="c:\Users\Howard\.vscode\extensions\robocorp.robotframework-lsp-1.11.0\src\robotframework_ls\vendored\robotframework_interactive\robot_interactive_console.robot">
+<robot generator="Robot 5.0.1 (Python 3.9.13 on win32)" generated="20230905 09:13:49.279" rpa="false" schemaversion="3">
+<suite id="s1" name="Robot Interactive Console" source="c:\Users\vince\.vscode\extensions\robocorp.robotframework-lsp-1.11.0\src\robotframework_ls\vendored\robotframework_interactive\robot_interactive_console.robot">
 <test id="s1-t1" name="Default Task/Test" line="5">
 <kw name="Interpreter Main Loop" library="MainLoop">
-<kw name="Load JSON from file">
-<var>${jsonfile}</var>
-<arg>testNIDRSAPI\\IDA_0304.json</arg>
-<msg timestamp="20230704 15:40:48.223" level="FAIL">No keyword with name 'Load JSON from file' found.</msg>
-<status status="FAIL" starttime="20230704 15:40:48.223" endtime="20230704 15:40:48.223"/>
+<status status="PASS" starttime="20230905 09:13:49.383" endtime="20230905 09:13:50.694"/>
 </kw>
-<kw name="Get Dictionary Keys">
-<var>${report_ids}</var>
-<arg>${reports}</arg>
-<status status="NOT RUN" starttime="20230704 15:40:48.225" endtime="20230704 15:40:48.226"/>
-</kw>
-<kw name="Get From List">
-<var>${last_report_id}</var>
-<arg>${report_ids}</arg>
-<arg>-1</arg>
-<status status="NOT RUN" starttime="20230704 15:40:48.227" endtime="20230704 15:40:48.227"/>
-</kw>
-<kw name="Update value to JSON">
-<var>${jsonfile}</var>
-<arg>${jsonfile}</arg>
-<arg>$.REPORT_ID</arg>
-<arg>${last_report_id}</arg>
-<status status="NOT RUN" starttime="20230704 15:40:48.228" endtime="20230704 15:40:48.228"/>
-</kw>
-<kw name="NIDRS API Request">
-<var>${response}</var>
-<arg>/api/IDA_0304</arg>
-<arg>${jsonfile}</arg>
-<status status="NOT RUN" starttime="20230704 15:40:48.229" endtime="20230704 15:40:48.229"/>
-</kw>
-<kw name="Status Should Be">
-<arg>OK</arg>
-<arg>${response}</arg>
-<status status="NOT RUN" starttime="20230704 15:40:48.231" endtime="20230704 15:40:48.231"/>
-</kw>
-<status status="PASS" starttime="20230704 15:40:47.684" endtime="20230704 15:40:50.493"/>
-</kw>
-<status status="PASS" starttime="20230704 15:40:47.684" endtime="20230704 15:40:50.494"/>
+<status status="PASS" starttime="20230905 09:13:49.383" endtime="20230905 09:13:50.694"/>
 </test>
-<status status="PASS" starttime="20230704 15:40:47.638" endtime="20230704 15:40:50.495"/>
+<status status="PASS" starttime="20230905 09:13:49.283" endtime="20230905 09:13:50.695"/>
 </suite>
 <statistics>
 <total>

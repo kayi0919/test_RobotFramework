@@ -50,10 +50,12 @@ COMMON REPORT
     
     Wait Until Element Contains    id=casePatient_Living_County    ${element}[COUNTY]
     Select From List By Label    id=casePatient_Living_County    ${element}[COUNTY]
+    
     # 在第二張通報的時候會出現list無內容的異常
     # 這邊click是為了觸發list重新更新
     Click Element    id=casePatient_Living_Town
     Wait Until Element Contains    id=casePatient_Living_Town    ${element}[TOWN]
+    
     Select From List By Label    id=casePatient_Living_Town    ${element}[TOWN]
     
     # 是否死亡

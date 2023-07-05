@@ -1,0 +1,41 @@
+{
+    "SAMPLE_RESULT": [
+        {
+            "BARCODE": "06-109-789526",
+            "DISEASE_ID": "19CoV",
+            "CDC_RECEIVED_UNIT_TYPE": 1,
+            "CDC_RECEIVED_UNIT": "22",
+            "CDC_RECEIVED_DATE": "2021-10-26T21:28:00+08:00",
+            "LAB_SAMPLE_NO": null,
+            "SAMPLE_TYPE": "17",
+            "SAMPLE_DATE": "2021-10-26T00:00:00+08:00",
+            "SAMPLE_TIMES": 2,
+            "INFORM_DAY": "2021-10-27T14:03:59+08:00",
+            "SUMMARY_RESULT": "1",
+            "SUMMARY_RESULT_DATE": "2021-10-27T14:03:59+08:00",
+            "DETERMINED_RESULT": "0",
+            "DETERMINED_RESULT_DATE": "2021-10-27T14:03:59+08:00",
+            "RESAMPLING": false,
+            "RESAMPLING_DAY": "0001-01-01T00:00:00+08:00",
+            "RESAMPLING_REASON": "",
+            "RESAMPLING_REASON_OTHER": null,
+            "IS_CHECK_OTHER_DISEASE": false,
+            "CHECK_OTHER_DISEASE_ID": null,
+            "ANTIBODY": [],
+            "PATHOGEN": [
+                {
+                    "PATHOGEN_NO": 1,
+                    "PATHOGEN": "02",
+                    "PATHOGEN_RESULT": "1",
+                    "PATHOGEN_PRITYPE": null,
+                    "PATHOGEN_MINTYPE": null,
+                    "PATHOGEN_SUBTYPE": null,
+                    "PATHOGEN_ISTOXINIDENTIFICATION": false,
+                    "PATHOGEN_VIRUSAMOUNT": "0",
+                    "PATHOGEN_COMMENTS": null,
+                    "PATHOGEN_RESULT_DAY": "2021-10-27T14:03:59+08:00"
+                }
+            ]
+        }
+    ]
+}

@@ -30,7 +30,7 @@ Clean up Report
     [Arguments]    ${report}    ${disease}
     Connect To Database    cx_Oracle    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_HOST}    ${DB_PORT}
     
-    ${script}    Get SQL SCRIPT
+    ${script}    Get SQL SCRIPT    clean_up_report
     ${script}    Replace String    ${script}    {{REPORT_ID}}    ${report}
     ${script}    Replace String    ${script}    {{DISEASE_ID}}    ${disease}
     ${sqlstring}    Set Variable    SELECT SYSTEM_ID FROM REPORT WHERE ID='${report}' AND REVISE_HISTORY=1
@@ -63,11 +63,49 @@ Clean up Report
 
     Disconnect From Database
 
+Clean up Cluster
+    [Arguments]    ${_cluster}
+    Connect To Database    cx_Oracle    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_HOST}    ${DB_PORT}
+    
+    #${script}    Get SQL SCRIPT    clean_up_cluster
+    #${script}    Replace String    ${script}    {{CLUSTER_ID}}    ${_cluster}
+    #${query_rlt}    Query    ${sqlstring}
+    
+    # 刪除通報單異動紀錄
+    Query    DELETE FROM CLUSTER_REPORT_FIELD_DIFF WHERE LOG_ID IN (SELECT LOG_ID FROM CLUSTER_REPORT_FIELD_DIFF_SUM WHERE CLUSTER_REPORT_ID = '${_cluster}')
+    Query    DELETE FROM CLUSTER_REPORT_FIELD_DIFF_SUM WHERE CLUSTER_REPORT_ID = '${_cluster}'
+    
+    # 個案症狀
+    Query    DELETE FROM CLUSTER_IDV_REPORT_SYMPTOMS WHERE CLUSTER_IDV_REPORT_ID IN (SELECT ID FROM CLUSTER_IDV_REPORT WHERE CLUSTER_REPORT_ID = '${_cluster}' AND REVISE_HISTORY = 1)
+
+    # 個案送驗
+    Query    DELETE FROM CLUSTER_IDV_REPORT_SAMPLE WHERE IDV_REPORT_ID IN (SELECT ID FROM CLUSTER_IDV_REPORT WHERE CLUSTER_REPORT_ID = '${_cluster}' AND REVISE_HISTORY = 1)
+
+    # 個案聯絡
+    Query    DELETE FROM CLUSTER_IDV_RPT_CONTACT_INFO WHERE CLUSTER_IDV_REPORT_ID IN (SELECT ID FROM CLUSTER_IDV_REPORT WHERE CLUSTER_REPORT_ID = '${_cluster}' AND REVISE_HISTORY = 1)
+
+    # 個案
+    Query    DELETE FROM CLUSTER_IDV_REPORT WHERE CLUSTER_REPORT_ID = '${_cluster}'
+
+    # 通報單
+    Query    DELETE FROM CLUSTER_REPORT WHERE ID = '${_cluster}'
+
+    # 研判結果
+    Query    DELETE FROM CLUSTER_REPORT_DETERMINED WHERE CLUSTER_REPORT_ID = '${_cluster}'
+
+    # 待成案
+    Query    DELETE FROM CLUSTER_REPORT_TOBE WHERE CLUSTER_REPORT_ID = '${_cluster}'
+
+    Log To Console    deleted row(s) from CLUSTER TABLES
+
+    Disconnect From Database
+
+
 Clean up Report with script
     [Arguments]    ${report}    ${disease}
     #Connect To Database    oracledb    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_HOST}    ${DB_PORT}
     Connect To Database    cx_Oracle    ${DB_NAME}    ${DB_USERNAME}    ${DB_PASSWORD}    ${DB_HOST}    ${DB_PORT}
-    ${script}    Get SQL SCRIPT
+    ${script}    Get SQL SCRIPT    clean_up_cluster
     ${script}    Replace String    ${script}    {{REPORT_ID}}    ${report}
     ${script}    Replace String    ${script}    {{DISEASE_ID}}    ${disease}
     ${tempSqlScript}    Write tmep file    ${script}
@@ -75,7 +113,8 @@ Clean up Report with script
     [Teardown]    End db handle    ${tempSqlScript}
 
 Get SQL SCRIPT
-    ${output}   Read file  testNIDRSAPI\\clean_up_report.sql    
+    [Arguments]    ${sqlfile}
+    ${output}   Read file  testNIDRSAPI\\${sqlfile}.sql    
     [Return]    ${output}
 
 Write tmep file

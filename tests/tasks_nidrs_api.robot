@@ -15,7 +15,11 @@ Suite Teardown    API TEST Teardown
 ${baseurl}    https://localhost:44334
 ${token}
 ${reports}
-${cluster}
+${clusters}
+# 以下為最後一筆通報資料
+${last_report}
+${report_disease}
+${barcode}
 
 *** Keywords ***
 API TEST Setup
@@ -24,13 +28,21 @@ API TEST Setup
     Set Global Variable    ${token}    ${output}
     ${reports}    Create Dictionary
     Set Global Variable    ${reports}
+    ${clusters}    Create Dictionary
+    Set Global Variable    ${clusters}
 
 API TEST Teardown
     Delete All Sessions
-    # 刪除產生的資料
+    # 刪除產生的法傳資料
     FOR    ${report}    ${disease}    IN    &{reports}
         Run Keyword And Ignore Error    Clean up Report    ${report}    ${disease}
     END
+
+    # 刪除產生的群聚資料
+    FOR    ${c}    ${cid}    IN    &{clusters}
+        Run Keyword And Ignore Error    Clean up Cluster    ${cid}
+    END
+    
 
 NIDRS API Request
     [Arguments]    ${apiuri}    ${json}
@@ -133,20 +145,26 @@ TEST API 0303 TRACE
         List Should Contain Value    ${report_list}    ${report}
     END
     
-TEST API 0304
+TEST API 0304 REPORT SAMPLE
     [Tags]    Smoke    API
-    [Documentation]    測試NDIRS API: IDA_0304    通報單-送驗單關聯
-    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0304.json
+    [Documentation]    測試NDIRS API: IDA_0304    通報單-送驗單關聯(REPORT SAMPLE)
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0304_REPORT_SAMPLE.json
 
     # 取得最後一筆通報單, 掛此送驗單
     ${report_ids}    Get Dictionary Keys    ${reports} 
     ${last_report_id}    Get From List    ${report_ids}    -1
+    ${last_disease_id}    Get From Dictionary    ${reports}     ${last_report_id}
 
-    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_ID    ${last_report_id}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_SAMPLE[0].REPORT_ID    ${last_report_id}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_SAMPLE[0].DISEASE_ID    ${last_disease_id}
 
     ${response}    NIDRS API Request    /api/IDA_0304   ${jsonfile}
     Status Should Be    OK    ${response}
+    ${json}    Set Variable    ${response.json()}
     # 補強檢查查詢通報單是否關聯
+    Set Global Variable    ${barcode}    ${json["REPORTED_SAMPLE"][0]["SAMPLE_ID"]}
+    Set Global Variable    ${report_disease}    ${last_disease_id}
+    Set Global Variable    ${last_report}    ${last_report_id}
     
 TEST API 0305 SQMS
     [Tags]    Smoke    API
@@ -268,7 +286,6 @@ TEST API 0312
     Set Global Variable    ${token}    ${lims_Token}
     # 補強檢查查詢通報單是否關聯
 
-
 TEST API 0351
     [Tags]    Smoke    API
     [Documentation]    測試NDIRS API: IDA_0351    群聚事件新增
@@ -277,19 +294,25 @@ TEST API 0351
     #變更token
     ${lims_Token}    Set Variable    ${token}
     ${output}   Read file  testNIDRSAPI\\token_SQMS
+    Set Global Variable    ${token}    ${output}
 
     ${response}    NIDRS API Request    /api/IDA_0351   ${jsonfile}
     Status Should Be    OK    ${response}
     # 取得群聚編號
     ${json}    Set Variable    ${response.json()}
-    Set Global Variable    ${cluster}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
+    #Set Global Variable    ${cluster}    
+    Set To Dictionary    ${clusters}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
+    Log To Console    0351產生群聚單號:${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
 
 TEST API 0352
     [Tags]    Smoke    API
     [Documentation]    測試NDIRS API: IDA_0352    群聚個案新增
     ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0352.json
 
-    ${jsonfile}    Update value to JSON    ${jsonfile}    $.ADD_CLUSTER_INDIVIDUALS.CLUSTER_ID    ${cluster}
+    ${cluster_ids}    Get Dictionary Keys    ${clusters} 
+    ${last_cluster_id}    Get From List    ${cluster_ids}    -1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.ADD_CLUSTER_INDIVIDUALS.CLUSTER_ID    ${last_cluster_id}
 
     ${response}    NIDRS API Request    /api/IDA_0352   ${jsonfile}
     Status Should Be    OK    ${response}
@@ -300,7 +323,10 @@ TEST API 0353
     [Documentation]    測試NDIRS API: IDA_0353    群聚個案查詢
     ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0353.json
 
-    ${jsonfile}    Update value to JSON    ${jsonfile}    $.CLUSTER_REPORT_ID[0]    ${cluster}
+    ${cluster_ids}    Get Dictionary Keys    ${clusters} 
+    ${last_cluster_id}    Get From List    ${cluster_ids}    -1
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.CLUSTER_REPORT_ID[0]    ${last_cluster_id}
 
     ${response}    NIDRS API Request    /api/IDA_0353   ${jsonfile}
     Status Should Be    OK    ${response}
@@ -309,22 +335,104 @@ TEST API 0353
     # 通報單號應包含
     ${cluster_list}    Evaluate    [item['CLUSTER_ID'] for item in ${json['CLUSTER_REPORTS']}]    json
     
-    List Should Contain Value    ${cluster_list}    ${cluster}
+    List Should Contain Value    ${cluster_list}    ${last_cluster_id}
 
+TEST API 0361
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0361    群聚事件通知單新增
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0361.json
 
-#TEST CLEAN UP REPORT
-#    Clean up Report    ${reportid}    ${diseaseid}
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_SSI
+    Set Global Variable    ${token}    ${output}
 
-#Extra data
-    #Status Should Be    OK    ${response}
-    #Run Keyword If    '${response.status_code}' == '200'
-    #...    Log To Console    ${response.json()}
-    ##...    Log To Console    ${response.content}
-    #...  ELSE IF    '${response.reason}' == 'Bad Request'
-    #       # 400錯誤預期格式為json
-    #...    Log To Console    ${response.reason}-${response.status_code}-${response.json()}
-    #...  ELSE
-    #...    Log To Console    ${response.reason}-${response.status_code}-${response.Content}
+    ${response}    NIDRS API Request    /api/IDA_0361   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 取得群聚編號
+    ${json}    Set Variable    ${response.json()}
+    #Set Global Variable    ${cluster}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
+    Set To Dictionary    ${clusters}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}    ${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
+    Log To Console    0361產生群聚單號:${json["ADD_CLUSTER_RESULT"]["CLUSTER_ID"]}
+
+TEST API 0401
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0401    檢驗結果接收
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0401.json
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.SAMPLE_RESULT[0].BARCODE    ${barcode}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.SAMPLE_RESULT[0].DISEASE_ID    ${report_disease}
+
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_LIMS
+    Set Global Variable    ${token}    ${output}
+
+    ${response}    NIDRS API Request    /api/IDA_0401   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 取得群聚編號
+    ${json}    Set Variable    ${response.json()}
+    Should Be Equal As Strings    ${barcode}    ${json["SAMPLE_RESULT_RCV"][0]["BARCODE"]}
+
+TEST API 0403
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0403    未完成再採檢
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0403.json
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_ID    ${last_report}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.BARCODE    ${barcode}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.DISEASE_ID    ${report_disease}
+
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_LIMS
+    Set Global Variable    ${token}    ${output}
+
+    ${response}    NIDRS API Request    /api/IDA_0403   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 取得群聚編號
+    ${json}    Set Variable    ${response.json()}
+    Should Be Equal As Strings    OK    ${json["RESULT"]}
+
+TEST API 0411
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0411    檢驗結果異動
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0411.json
+
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.REPORT_ID    ${last_report}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.BARCODE    ${barcode}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.DISEASE_ID    ${report_disease}
+
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_LIMS
+    Set Global Variable    ${token}    ${output}
+
+    ${response}    NIDRS API Request    /api/IDA_0411   ${jsonfile}
+    Status Should Be    OK    ${response}
+    # 取得群聚編號
+    ${json}    Set Variable    ${response.json()}
+    Should Be Equal As Strings    OK    ${json["RESULT"]}
+
+TEST API 0402
+    [Tags]    Smoke    API
+    [Documentation]    測試NDIRS API: IDA_0402    檢驗狀態異動
     
-    #[Teardown]    Delete All Sessions
+    ${jsonfile}    Load JSON from file    testNIDRSAPI\\IDA_0402.json
 
+    # 刪除送驗單
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.BARCODE    ${barcode}
+    ${jsonfile}    Update value to JSON    ${jsonfile}    $.DISEASE_ID    ${report_disease}
+    #${jsonfile}    Update value to JSON    ${jsonfile}    $.DELETED    ${True}
+
+    #變更token
+    ${lims_Token}    Set Variable    ${token}
+    ${output}   Read file  testNIDRSAPI\\token_LIMS
+    Set Global Variable    ${token}    ${output}
+
+    ${response}    NIDRS API Request    /api/IDA_0402   ${jsonfile}
+    Log To Console    ${response.json()}
+    Status Should Be    OK    ${response}
+    # 取得群聚編號
+    ${json}    Set Variable    ${response.json()}
+    Should Be Equal As Strings    OK    ${json["RESULT"]}

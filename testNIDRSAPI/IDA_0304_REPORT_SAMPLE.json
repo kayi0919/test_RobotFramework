@@ -1,0 +1,86 @@
+{
+    "REPORT_SAMPLE": [
+        {
+            "REPORT_ID": "0118450201002",
+            "DISEASE_ID": "061",
+            "SAMPLE_ID": "01-112-060200",
+            "SAMPLE_TYPE": 0,
+            "SAMPLE_DATE": "2023-06-23T00:00:00+08:00",
+            "SAMPLE_TIMES": 1,
+            "SAMPLE_CREATE_DATE": "2023-06-30T01:14:04.2394209+08:00",
+            "SAMPLING_HOSPITAL": "0501110514",
+            "REQUESTER": "測試送驗人",
+            "RECEIVED_UNIT_TYPE": 3,
+            "RECEIVED_UNIT": "098074",
+            "CREATE_DATE": "2023-06-30T01:14:04.2394209+08:00",
+            "STATUS": "",
+            "PREBARCODE": null
+        }
+    ],
+    "_REPORT_CONTACTS": [
+        {
+            "REPORT_ID": "1100100000377",
+            "DISEASE_ID": "SICV2",
+            "CONTACTS": [
+                {
+                    "IDNO": "A123",
+                    "NAME": "123",
+                    "BIRTHDAY": "2020-06-20",
+                    "GENDER": "M",
+                    "CITIZEN": "0",
+                    "NATIONALITY": "158",
+                    "RESIDENCE_COUNTY": "01",
+                    "RESIDENCE_TOWN": "0101",
+                    "SAMPLE_ID": "1100100000377",
+                    "SAMPLE_TYPE": 0,
+                    "SAMPLE_DATE": "2020-06-20T00:00:00+08:00",
+                    "SAMPLE_TIMES": 20,
+                    "SAMPLE_CREATE_DATE": "2020-10-26T17:06:33.646+08:00",
+                    "SAMPLING_HOSPITAL": "123456789",
+                    "DISEASE_ID": "SICV2",
+                    "RECEIVED_UNIT_TYPE": 1,
+                    "RECEIVED_UNIT": "22",
+                    "CREATE_DATE": "2020-10-26T17:06:33.646+08:00",
+                    "STATUS": ""
+                },
+                {
+                    "IDNO": "A1243",
+                    "NAME": "123",
+                    "BIRTHDAY": "2020-06-20",
+                    "GENDER": "M",
+                    "CITIZEN": "0",
+                    "NATIONALITY": "158",
+                    "RESIDENCE_COUNTY": "01",
+                    "RESIDENCE_TOWN": "0101",
+                    "SAMPLE_ID": "1100100000378",
+                    "SAMPLE_TYPE": 0,
+                    "SAMPLE_DATE": "2020-06-20T00:00:00+08:00",
+                    "SAMPLE_TIMES": 20,
+                    "SAMPLE_CREATE_DATE": "2020-10-26T17:06:33.646+08:00",
+                    "SAMPLING_HOSPITAL": "123456789",
+                    "DISEASE_ID": "SICV2",
+                    "RECEIVED_UNIT_TYPE": 1,
+                    "RECEIVED_UNIT": "22",
+                    "CREATE_DATE": "2020-10-26T17:06:33.646+08:00",
+                    "STATUS": ""
+                }
+            ]
+        }
+    ],
+    "_CLUSTER_REPORT_SAMPLE": [
+        {
+            "CLUSTER_INDIVIDUAL_ID": "S109900105663",
+            "DISEASE_ID": "001",
+            "SAMPLE_ID": "109004076000017",
+            "SAMPLE_TYPE": 0,
+            "SAMPLE_DATE": "2021-03-03T14:59:20.558Z",
+            "SAMPLE_TIMES": 0,
+            "SAMPLING_HOSPITAL": "12345",
+            "REQUESTER": "string",
+            "RECEIVED_UNIT_TYPE": 0,
+            "RECEIVED_UNIT": "22",
+            "CREATE_DATE": "2021-03-03T14:59:20.558Z",
+            "STATUS": ""
+        }
+    ]
+}
