@@ -189,7 +189,7 @@ COMMON REPORT
     IF    '${element}[XRAY_DIAGNOSIS_CHOICE]' != 'None'
         IF    ${element}[XRAY_DIAGNOSIS_CHOICE] == 1
             Click Element    id=ReportDisease_010_S_XRAY_DIAGNOSIS_UNIT_name
-            Wait Until Page Contains    關鍵字查詢
+            
             Search Type    ${element}[XRAY_SEARCH_TYPE]    ${element}[XRAY_KEYWORD_SEARCH]    ${element}[XRAY_APARTMENT_CITY]    ${element}[XRAY_APARTMENT_TYPE]
         ELSE
             Click Element    //*[@id="diseaseReportData"]/div[3]/div[1]/div[7]/div/div/div/div/div/a
@@ -220,7 +220,7 @@ COMMON REPORT
     IF    '${element}[PLGYCHK_DIAGNOSIS_CHOICE]' != 'None'
         IF    ${element}[PLGYCHK_DIAGNOSIS_CHOICE] == 1
             Click Element    id=ReportDisease_010_S_ReportTBSample_F_PLGYCHK_UNIT_0_name
-            Wait Until Page Contains    關鍵字查詢
+            
             Search Type    ${element}[PLGYCHK_SEARCH_TYPE]    ${element}[PLGYCHK_KEYWORD_SEARCH]    ${element}[PLGYCHK_APARTMENT_CITY]    ${element}[PLGYCHK_APARTMENT_TYPE]
         ELSE
             Click Element    //*[@id="ReportTBSample_0"]/div[3]/div[1]/div/div/div/div/a
@@ -242,7 +242,7 @@ COMMON REPORT
     IF    '${element}[SMEAR_CHK_DIAGNOSIS_CHOICE]' != 'None'
         IF    ${element}[SMEAR_CHK_DIAGNOSIS_CHOICE] == 1
             Click Element    id=ReportDisease_010_S_ReportTBSample_F_SMEAR_CHK_UNIT_0_name
-            Wait Until Page Contains    關鍵字查詢
+            
             Search Type    ${element}[SMEAR_CHK_SEARCH_TYPE]    ${element}[SMEAR_CHK_KEYWORD_SEARCH]    ${element}[SMEAR_CHK_APARTMENT_CITY]    ${element}[SMEAR_CHK_APARTMENT_TYPE]
         ELSE
             Click Element    //*[@id="ReportTBSample_0"]/div[4]/div[1]/div/div/div/div/a
@@ -262,7 +262,7 @@ COMMON REPORT
     IF    '${element}[PCR_DIAGNOSIS_CHOICE]' != 'None'
         IF    ${element}[PCR_DIAGNOSIS_CHOICE] == 1
             Click Element    id=ReportDisease_010_S_ReportTBSample_F_PCR_CHK_UNIT_0_name
-            Wait Until Page Contains    關鍵字查詢
+            
             Search Type    ${element}[PCR_SEARCH_TYPE]    ${element}[PCR_KEYWORD_SEARCH]    ${element}[PCR_APARTMENT_CITY]    ${element}[PCR_APARTMENT_TYPE]
         ELSE
             Click Element    //*[@id="ReportTBSample_0"]/div[5]/div[1]/div/div/div/div/a
@@ -283,7 +283,7 @@ COMMON REPORT
     IF    '${element}[CULTURE_CHK_DIAGNOSIS_CHOICE]' != 'None'
         IF    ${element}[CULTURE_CHK_DIAGNOSIS_CHOICE] == 1
             Click Element    id=ReportDisease_010_S_ReportTBSample_F_CULTURE_CHK_UNIT_0_name
-            Wait Until Page Contains    關鍵字查詢
+            
             Search Type    ${element}[CULTURE_CHK_SEARCH_TYPE]    ${element}[CULTURE_CHK_KEYWORD_SEARCH]    ${element}[CULTURE_CHK_APARTMENT_CITY]    ${element}[CULTURE_CHK_APARTMENT_TYPE]
         ELSE
             Click Element    //*[@id="ReportTBSample_0"]/div[6]/div[1]/div/div/div/div/a            
@@ -302,7 +302,7 @@ COMMON REPORT
     IF    '${element}[TBTEST_IDENTIFY_DIAGNOSIS_CHOICE]' != 'None'
         IF    ${element}[TBTEST_IDENTIFY_DIAGNOSIS_CHOICE] == 1
             Click Element    id=ReportDisease_010_S_ReportTBSample_F_TBTEST_IDENTIFY_UNIT_0_name
-            Wait Until Page Contains    關鍵字查詢
+            
             Search Type    ${element}[TBTEST_IDENTIFY_SEARCH_TYPE]    ${element}[TBTEST_IDENTIFY_KEYWORD_SEARCH]    ${element}[TBTEST_IDENTIFY_APARTMENT_CITY]    ${element}[TBTEST_IDENTIFY_APARTMENT_TYPE]
         ELSE
             Click Element    //*[@id="ReportTBSample_0"]/div[7]/div[1]/div/div/div/div/a

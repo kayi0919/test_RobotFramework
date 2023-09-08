@@ -140,7 +140,7 @@ COMMON REPORT
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
     Sleep    20ms
-    IF    '${element}[HAS_SYMPTOM]' == 'None'
+    IF    '${element}[HAS_SYMPTOM]' != 'None'
         IF    ${element}[HAS_SYMPTOM] == $True
             Click Element    //*[@id="ReportDisease_symp"]/div[1]/label
             Sleep    200ms

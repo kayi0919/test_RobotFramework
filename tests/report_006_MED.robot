@@ -16,7 +16,7 @@ ${num}
 
 *** Keywords ***
 Read Excel
-    Open Workbook    testdata\\Smoke_WEB_MED_006_NEWREPORT_01.xlsx
+    Open Workbook    testdata\\Smoke_WEB_MED_006_NEWREPORT_02.xlsx
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
     Log To Console    \r\n${sheet1}\r\n${sheet2}
@@ -155,6 +155,52 @@ COMMON REPORT
         
         Sleep    1s        
     END
+
+    # 檢驗資料
+    IF    '${element}[CHECK_DATA]' != 'None'
+        @{check_data}    Split String    ${element}[CHECK_DATA]    ,
+        FOR    ${data}    IN    @{check_data}
+            IF    ${data} == 1
+                Click Element    //label[@for="ReportDisease_006_S_Q000060001_AS00000017"]                
+            END
+            IF    ${data} == 2
+                Click Element    //label[@for="ReportDisease_006_S_Q000060002_AS00000018"]
+                IF    '${element}[SPECIALIST]' != 'None'
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060003_A000000295"]    ${element}[SPECIALIST]
+                END
+            END
+            IF    ${data} == 3
+                Click Element    //label[@for="ReportDisease_006_S_Q000060004_AS00000019"]
+                IF    '${element}[FIRST_ANTIBODY_TITER]' != 'None'
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060016_A000000117"]    ${element}[FIRST_ANTIBODY_TITER]
+                    ${tmpday}    Get Taiwain Date String    ${element}[FIRST_TEST_DATE]
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060016_A000000118"]    ${tmpday}
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060016_A000000295"]    ${element}[FIRST_TEST_METHOD]
+                END
+                IF    '${element}[SECOND_ANTIBODY_TITER]' != 'None'
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060017_A000000117"]    ${element}[SECOND_ANTIBODY_TITER]
+                    ${tmpday}    Get Taiwain Date String    ${element}[SECOND_TEST_DATE]
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060017_A000000118"]    ${tmpday}
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060017_A000000295"]    ${element}[SECOND_TEST_METHOD]
+                END
+            END
+            IF    ${data} == 4
+                Click Element    //label[@for="ReportDisease_006_S_Q000060005_AS00000020"]
+                IF    '${element}[ANTIBODY_TITER]' != 'None'
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060020_A000000212"]    ${element}[ANTIBODY_TITER]
+                    
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060020_A000000295"]    ${element}[TEST_METHOD]
+                END
+            END
+            IF    ${data} == 5
+                Click Element    //label[@for="ReportDisease_006_S_Q000060014_AS00000029"]
+                IF    '${element}[REASON]' != 'None'
+                    Input Text    id=ReportDisease_006_S_Q000060015_A000000295    ${element}[REASON]
+                END
+            END
+        END        
+    END
+
     
     
     # 職業
@@ -188,34 +234,7 @@ COMMON REPORT
         
         FOR    ${history}    IN    @{contact_history}
             Log To Console    ${history}
-            Click Element    //label[contains(text(), '${history}')]
-
-            # 接觸動物 野外活動 污染的環境text未在label內 這裡獨立寫程式碼
-            IF    '${history}' == '接觸動物'
-                #label contains不會點選
-                Click Element    //*[@for="ReportDisease_100_S_Q010000021_AS01000001"]
-                IF    '${element}[ANIMAL_CONTACT_DATE]' != 'None'                    
-                    Click Element    id=ReportDisease_100_S_Q010000022_AS01000002
-                    ${tmpday}    Get Taiwain Date String    ${element}[ANIMAL_CONTACT_DATE]
-                    Input Text    //*[@id="ReportDisease_100_S_Q010000022_AS01000002"]    ${tmpday}                    
-                END                                
-            END
-            IF    '${history}' == '野外活動'
-                IF    '${element}[ACTIVITY_DATE]' != 'None'
-                    Click Element    id=ReportDisease_100_S_Q010000024_AS01000004
-                    ${tmpday}    Get Taiwain Date String    ${element}[ACTIVITY_DATE]
-                    Input Text    //*[@id="ReportDisease_100_S_Q010000024_AS01000004"]    ${tmpday}                    
-                END
-                               
-            END
-            IF    '${history}' == '污染的環境'
-                IF    '${element}[POLLUTE_ENV_DATE]' != 'None'
-                    Click Element    id=ReportDisease_100_S_Q010000026_AS01000006
-                    ${tmpday}    Get Taiwain Date String    ${element}[POLLUTE_ENV_DATE]
-                    Input Text    //*[@id="ReportDisease_100_S_Q010000026_AS01000006"]    ${tmpday}                    
-                END               
-            END
-            Sleep    3s
+            Click Element    //label[contains(text(), '${history}')]            
         END
     END
     
@@ -244,7 +263,7 @@ COMMON REPORT
 
 
 *** Tasks ***
-Smoke_WEB_MED_006_NEWREPORT_01
+Smoke_WEB_MED_006_NEWREPORT_02
     [Documentation]    煙霧測試:醫療院所阿米巴性痢疾通報
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}

@@ -74,10 +74,10 @@ Gender
     [Arguments]    ${element}
     IF    '${element}[GENDER]' != 'None'
         Click Element    //*[@id="casePatient_Gender_area"]
-        IF    '${element}[GENDER]' == 1
+        IF    '${element}[GENDER]' == '1'
             Click Element    //label[@for="casePatient_Gender_M"]
         ELSE 
-            IF    '${element}[GENDER]' == 3
+            IF    '${element}[GENDER]' == '3'
                 Click Element    //label[@for="casePatient_Gender_X"]
             ELSE
                 Click Element    //label[@for="casePatient_Gender_F"]
@@ -93,6 +93,8 @@ Nationality
             Click Element    //label[@for="casePatient_Nation_Local"]        
         ELSE
             Click Element    //label[@for="casePatient_Nation_Foreigner"]
+            Sleep    1s
+            Click Element    id=_easyui_textbox_input3
             Sleep    1s
             Input Text    id=_easyui_textbox_input3    ${element}[COUNTRY]
             Sleep    2s
@@ -198,7 +200,6 @@ CasePatient
             Click Element    id=casePatient_ReferHospName_SearchModal
 
             #醫院搜尋視窗            
-            Wait Until Page Contains    關鍵字查詢
             IF    '${element}[SEARCH_TYPE]' != 'None'
                 Search Type    ${element}[SEARCH_TYPE]    ${element}[KEYWORD_SEARCH]    ${element}[APARTMENT_CITY]    ${element}[APARTMENT_TYPE]    
             END
@@ -217,6 +218,7 @@ CasePatient
 #醫院搜尋視窗 搜尋方式 1關鍵字  2 縣市+類別
 Search Type
     [Arguments]    ${search_type}    ${keyword_search}    ${apartment_city}    ${apartment_type}
+    Wait Until Page Contains    關鍵字查詢
     IF    '${search_type}' == '1'
                 Sleep    2s
                 Click Element    //*[@id="hospSelectorData"]/div/div                 
