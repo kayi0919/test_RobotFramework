@@ -7,8 +7,8 @@ Library          RPA.Desktop
 Library          RPA.Robocorp.WorkItems
 Library          String
 Library          OperatingSystem
-Resource         keywords.robot
-Resource         Variables.robot
+Resource   ..\\keywords\\keywords.robot
+Resource   ..\\keywords\\Variables.robot
 
 *** Variables ***
 ${screenshot}

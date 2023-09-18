@@ -2,8 +2,9 @@
 Documentation    登入 & 快速查詢測試
 Library          RPA.Browser.Selenium
 Library          RPA.Excel.Files
-Resource         keywords.robot
-Resource         Variables.robot
+#Library          webdriver.py
+Resource         ..\\keywords\\keywords.robot
+Resource         ..\\keywords\\Variables.robot
 
 *** Variables ***
 ${test_users}
@@ -42,6 +43,7 @@ Smoke Test Login And Query
     [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
+    #open_browser_in_py
     Read Excel
 
     FOR    ${element}    IN    @{test_users}

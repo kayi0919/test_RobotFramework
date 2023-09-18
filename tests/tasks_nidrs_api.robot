@@ -6,8 +6,8 @@ Library    RPA.FileSystem
 Library    RPA.Windows
 Library    RPA.Robocorp.WorkItems
 Resource    db_handle.robot
-Resource         keywords.robot
-#Resource    ../keywords/keywords.robot
+#Resource         keywords.robot
+Resource    ../keywords/keywords.robot
 Suite Setup    API TEST Setup
 Suite Teardown    API TEST Teardown
 

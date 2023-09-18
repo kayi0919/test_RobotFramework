@@ -2,6 +2,8 @@
 Documentation       Template keyword resource.
 Library        DateTime
 Library        RPA.Browser.Selenium
+Library        RPA.Excel.Files
+
 
 *** Keywords ***
 Get Date String
@@ -62,6 +64,51 @@ Login
     Click Element   xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/button
     Wait Until Page Contains    通報單查詢管理
 
+
+Read Report Excel
+    [Arguments]    ${file}
+    Open Workbook    testdata\\${file}
+    ${sheet1}    Read Worksheet    name=login    header=True
+    ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
+    
+    Log To Console    \r\n${sheet1}\r\n${sheet2}
+    Close Workbook
+    Set Global Variable    ${test_users}    ${sheet1}
+    Set Global Variable    ${test_reports}    ${sheet2}
+
+Read Update Excel
+    [Arguments]    ${file}
+    Open Workbook    testdata\\${file}
+    ${sheet3}=    Read Worksheet    name=update   header=True    start=3
+    Log To Console    \r\n${sheet3}
+    Close Workbook
+    Set Global Variable    ${test_update}    ${sheet3}
+
+Write Excel
+    [Arguments]    ${data_id}    ${file}
+    Open Workbook    testdata\\${file}
+    ${table}    Create Dictionary    產生編號=${data_id}
+    Append Rows To Worksheet    ${table}    start=4
+    Save Workbook
+    Close Workbook
+
+Diagnostician
+    [Arguments]    ${element}
+    IF    '${element}[IDNO]' != 'None'
+        Input Text    id=casePatient_Idno    ${element}[IDNO]       
+    END
+IDNO
+    [Arguments]    ${element}
+    IF    '${element}[DIAGNOSTICIAN]' != 'None'
+        Input Text    id=reporter_DiagDoctor    ${element}[DIAGNOSTICIAN]        
+    END
+
+Name
+    [Arguments]    ${element}
+    IF    '${element}[NAME]' != 'None'
+        Input Text    id=casePatient_Name    ${element}[NAME]        
+    END
+
 #非必填: 姓名羅馬拼音
 Romanization
     [Arguments]    ${element}
@@ -83,6 +130,13 @@ Gender
                 Click Element    //label[@for="casePatient_Gender_F"]
             END
         END
+    END
+
+Birthday
+    [Arguments]    ${element}
+    IF    '${element}[BIRTHDAY]' != 'None'
+        Log To Console    ${element}[BIRTHDAY]
+        Input Text    id=casePatient_Birthdate    ${element}[BIRTHDAY]        
     END
 
 #非必填: 國籍
@@ -116,6 +170,33 @@ Nationality
                 Sleep    2s
             END
         END
+    END
+
+CellPhone
+    [Arguments]    ${element}
+    IF    '${element}[CELLPHONE]' != 'None'
+        Input Text    //input[@id="casePatient_MobilePhone_0"]    ${element}[CELLPHONE]
+    END
+
+ContactPhone
+    [Arguments]    ${element}
+    IF    '${element}[CONTACTPHONE]' != 'None'
+        Input Text    //input[@id="casePatient_ContactPhone_0"]    ${element}[CONTACTPHONE]
+    END
+
+County
+    [Arguments]    ${element}
+    IF    '${element}[COUNTY]' != 'None'
+        Wait Until Element Contains    id=casePatient_Living_County    ${element}[COUNTY]
+        Select From List By Label    id=casePatient_Living_County    ${element}[COUNTY]
+    END
+
+Town
+    [Arguments]    ${element}
+    IF    '${element}[TOWN]' != 'None'
+        Click Element    id=casePatient_Living_Town
+        Wait Until Element Contains    id=casePatient_Living_Town    ${element}[TOWN]
+        Select From List By Label    id=casePatient_Living_Town    ${element}[TOWN]
     END
 
 #非必填: 居住村里
@@ -274,47 +355,76 @@ Travel_History
         Click Element    //*[@id="ReportDisease_mainTrav"]/div[1]/label
         Sleep    2s
         
-        IF    '${element}[MAIN_TRAVAL]' == '1'
-            #國內
-            Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[1]/div/label
-            Click Element    id=ReportDisease_inCountry_0_county
-            Select From List By Label    id=ReportDisease_inCountry_0_county    ${element}[IN_COUNTRY_CITY]
-            ${tmpday}    Get Taiwain Date String    ${element}[IN_COUNTRY_START]
-            Input Text    //*[@id="ReportDisease_inCountry_0_start"]    ${tmpday}
-            ${tmpday}    Get Taiwain Date String    ${element}[IN_COUNTRY_END]
-            Input Text    //*[@id="ReportDisease_inCountry_0_end"]    ${tmpday}
-        END
-        IF    '${element}[MAIN_TRAVAL]' == '2'
-            #國外旅遊
-            Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[3]/div/label                
-            Sleep    2s
-            Click Element    //*[@id="_easyui_textbox_input6"]                            
-            Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY]            
-            Sleep    2s
-            ${tmpday}    Get Taiwain Date String    ${element}[OUT_COUNTRY_START]
-            Input Text    //*[@id="ReportDisease_outCountry_0_start"]    ${tmpday}
-            ${tmpday}    Get Taiwain Date String    ${element}[OUT_COUNTRY_END]
-            Input Text    //*[@id="ReportDisease_outCountry_0_end"]    ${tmpday}
-        END
-        IF    '${element}[MAIN_TRAVAL]' == '3'
-            #國外居住
-            Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[5]/div/label
-            Sleep    2s
-            Click Element    //*[@id="_easyui_textbox_input6"]
-            Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY_LIVE]
-            Sleep    2s
-            ${tmpday}    Get Taiwain Date String    ${element}[DEPARTURE_DATE]
-            Input Text    //*[@id="ReportDisease_outCountryLive_0_county_out"]    ${tmpday}
-            ${tmpday}    Get Taiwain Date String    ${element}[ENTRY_DATE]
-            Input Text    //*[@id="ReportDisease_outCountryLive_0_county_in"]    ${tmpday}
-        END     
+            IF    '${element}[MAIN_TRAVAL]' == '1'
+                #國內
+                Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[1]/div/label
+                Click Element    id=ReportDisease_inCountry_0_county
+                Select From List By Label    id=ReportDisease_inCountry_0_county    ${element}[IN_COUNTRY_CITY]
+                ${tmpday}    Get Taiwain Date String    ${element}[IN_COUNTRY_START]
+                Input Text    //*[@id="ReportDisease_inCountry_0_start"]    ${tmpday}
+                ${tmpday}    Get Taiwain Date String    ${element}[IN_COUNTRY_END]
+                Input Text    //*[@id="ReportDisease_inCountry_0_end"]    ${tmpday}
+            END
+            IF    '${element}[MAIN_TRAVAL]' == '2'
+                #國外旅遊
+                Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[3]/div/label                
+                Sleep    2s
+                Click Element    //*[@id="_easyui_textbox_input6"]                            
+                Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY]            
+                Sleep    2s
+                ${tmpday}    Get Taiwain Date String    ${element}[OUT_COUNTRY_START]
+                Input Text    //*[@id="ReportDisease_outCountry_0_start"]    ${tmpday}
+                ${tmpday}    Get Taiwain Date String    ${element}[OUT_COUNTRY_END]
+                Input Text    //*[@id="ReportDisease_outCountry_0_end"]    ${tmpday}
+            END
+            IF    '${element}[MAIN_TRAVAL]' == '3'
+                #國外居住
+                Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[5]/div/label
+                Sleep    2s
+                Click Element    //*[@id="_easyui_textbox_input6"]
+                Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY_LIVE]
+                Sleep    2s
+                ${tmpday}    Get Taiwain Date String    ${element}[DEPARTURE_DATE]
+                Input Text    //*[@id="ReportDisease_outCountryLive_0_county_out"]    ${tmpday}
+                ${tmpday}    Get Taiwain Date String    ${element}[ENTRY_DATE]
+                Input Text    //*[@id="ReportDisease_outCountryLive_0_county_in"]    ${tmpday}
+            END     
         
-    ELSE
-        Click Element    //*[@id="ReportDisease_mainTrav"]/div[2]/label
+        ELSE
+            Click Element    //*[@id="ReportDisease_mainTrav"]/div[2]/label
+        END
     END
-        
-    END
+
+Create Data
+    Click Button    //*[@id="buttonReportSend"]
+    Wait Until Page Contains    確認是否送出通報單
+    Sleep    200ms
+    Click Button    //*[@id="_dialog"]/div/div/div[3]/div[1]/button
+    Sleep    100ms
+
+    # 通報完成頁
+    Wait Until Page Contains    法定傳染病個案通報完成
     
+
+Update Data
+    Click Element    id=editFunctionButtons
+    #與commom report送出按鈕撞名 使用xpath
+    Click Button    //div[@id="editFunctionButtons"]/button[1]
+
+    Wait Until Page Contains    確認是否送出通報單
+    Sleep    1s
+    Click Button    //*[@id="_dialog"]/div/div/div[3]/div[1]/button
+    Sleep    1s
+
+    Wait Until Page Contains    確定增修以下內容
+    Sleep    1s
+    Click Button    //div[@id="editFieldConfirmModal"]/div/div/div/button[1]
+    Sleep    1s
+
+    Wait Until Page Contains    增修完成
+    Sleep    1s
+    Click Element    //div[@id="alertDialog"]/div/div/div[3]/div/a
+
 
 Logout
     Click Button    //*[@id="header"]/ul/li[4]/button
