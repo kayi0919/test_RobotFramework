@@ -18,7 +18,7 @@ ${num}
 
 *** Keywords ***
 Read Excel
-    Open Workbook    testdata\\Smoke_WEB_MED_044_NEWREPORT_02.xlsx
+    Open Workbook    testdata\\Smoke_WEB_MED_044_NEWREPORT_01.xlsx
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
     Log To Console    \r\n${sheet1}\r\n${sheet2}
@@ -325,7 +325,7 @@ COMMON REPORT
 
 
 *** Tasks ***
-Smoke_WEB_MED_044_NEWREPORT_02
+Smoke_WEB_MED_044_NEWREPORT_01
     [Documentation]    煙霧測試:醫療院所人類免疫缺乏病毒感染(含母子垂直感染及孕產婦疑似個案)18歲以上通報
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}

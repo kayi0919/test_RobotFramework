@@ -16,7 +16,7 @@ ${num}
 
 *** Keywords ***
 Read Excel
-    Open Workbook    testdata\\Smoke_WEB_MED_100_NEWREPORT_02.xlsx
+    Open Workbook    testdata\\Smoke_WEB_MED_100_NEWREPORT_01.xlsx
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
     Log To Console    \r\n${sheet1}\r\n${sheet2}
@@ -244,7 +244,7 @@ COMMON REPORT
 
 
 *** Tasks ***
-Smoke_WEB_MED_100_NEWREPORT_02
+Smoke_WEB_MED_100_NEWREPORT_01
     [Documentation]    煙霧測試:醫療院所鉤端螺旋體病通報
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
@@ -252,7 +252,7 @@ Smoke_WEB_MED_100_NEWREPORT_02
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Read Excel
     # 清除截圖路徑
-    #Remove Directory    ${screenshot}    resource=true
+    Remove Directory    ${screenshot}    resource=true
 
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}

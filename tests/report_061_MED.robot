@@ -18,7 +18,7 @@ ${num}
 
 *** Keywords ***
 Read Excel
-    Open Workbook    testdata\\Smoke_WEB_MED_061_NEWREPORT_01.xlsx
+    Open Workbook    testdata\\Smoke_WEB_MED_061_NEWREPORT_02.xlsx
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
     Log To Console    \r\n${sheet1}\r\n${sheet2}
@@ -251,11 +251,13 @@ COMMON REPORT
                     Click Element    //label[contains(text(), '${cond}')]
                     # 點選'其他症狀'
                     IF    '${cond}' == '嚴重器官損傷'
-                        @{organ_injury}    Split String    ${element}[ORGAN_INJURE]    ,
-                        FOR    ${injury}    IN    @{organ_injury}
-                            Log To Console    ${injury}
-                            Click Element    //label[contains(text(), '${injury}')]                    
-                        END
+                        IF    '${element}[ORGAN_INJURE]' != 'None'
+                            @{organ_injury}    Split String    ${element}[ORGAN_INJURE]    ,
+                            FOR    ${injury}    IN    @{organ_injury}
+                                Log To Console    ${injury}
+                                Click Element    //label[contains(text(), '${injury}')]                    
+                            END                            
+                        END                        
                     END
                 END                
             END            
@@ -290,7 +292,7 @@ COMMON REPORT
 
 
 *** Tasks ***
-Smoke_WEB_MED_061_NEWREPORT_01
+Smoke_WEB_MED_061_NEWREPORT_02
     [Documentation]    煙霧測試:醫療院所登革熱通報
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
@@ -298,7 +300,7 @@ Smoke_WEB_MED_061_NEWREPORT_01
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Read Excel
     # 清除截圖路徑
-    Remove Directory    ${screenshot}    resource=true
+    #Remove Directory    ${screenshot}    resource=true
 
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}

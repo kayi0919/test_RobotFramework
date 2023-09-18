@@ -241,7 +241,7 @@ COMMON REPORT
 
 
     # 慢性病
-    IF    '${element}[CHRONIC]' == 'None'
+    IF    '${element}[CHRONIC]' != 'None'
         IF    ${element}[CHRONIC] == $True
         Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00004_select"]/div[1]/label
         Sleep    200ms
@@ -284,7 +284,7 @@ COMMON REPORT
 
 
     # 氧治療
-    IF    '${element}[O2CURE]' == 'None'
+    IF    '${element}[O2CURE]' != 'None'
         IF    ${element}[O2CURE] == $True
             Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00031_section"]/div[1]/label
         ELSE
