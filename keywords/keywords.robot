@@ -68,23 +68,35 @@ Login
 Read Report Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
+    
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
-    
     Log To Console    \r\n${sheet1}\r\n${sheet2}
     Close Workbook
     Set Global Variable    ${test_users}    ${sheet1}
     Set Global Variable    ${test_reports}    ${sheet2}
 
+Clean ID Excel
+    [Arguments]    ${file}
+    Open Workbook    testdata\\${file}
+    Delete Rows    start=4    end=100
+    Save Workbook
+    Close Workbook
+
+Read ID Excel
+    [Arguments]    ${file}
+    Open Workbook    testdata\\${file}
+    ${sheet3}=    Read Worksheet    name=ID   header=True    start=3
+    Log To Console    \r\n${sheet3}
+    Close Workbook
+    Set Global Variable    ${test_id}    ${sheet3}
     
 Read Update Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
-    ${sheet3}=    Read Worksheet    name=ID   header=True    start=3
     ${sheet4}=    Read Worksheet    name=update   header=True    start=3
-    Log To Console    \r\n${sheet3}\r\n${sheet4}
+    Log To Console    \r\n${sheet4}
     Close Workbook
-    Set Global Variable    ${test_id}    ${sheet3}
     Set Global Variable    ${test_update}    ${sheet4}
     
 

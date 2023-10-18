@@ -307,6 +307,7 @@ Smoke_WEB_MED_061_NEWREPORT_02
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
+    Clean ID Excel    Data_ID.xlsx
     Read Report Excel    Smoke_WEB_MED_061_NEWREPORT_01.xlsx
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
@@ -326,6 +327,7 @@ Smoke_WEB_MED_061_NEWREPORT_02
         END
         
         # 測試2 增修
+        Read ID Excel    Data_ID.xlsx
         Read Update Excel    Smoke_WEB_MED_061_NEWREPORT_01.xlsx
         FOR    ${update}    IN    @{test_update}
             FOR    ${id}    IN    @{test_id}

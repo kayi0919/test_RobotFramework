@@ -215,7 +215,7 @@ COMMON REPORT
 
         Set Global Variable    ${item_result}    ${True}
         #讀取編號
-        Write Excel    ${report_id}    ${element}[Num]    Smoke_WEB_MED_098_NEWREPORT_01.xlsx
+        Write Excel    ${report_id}    ${element}[Num]    Data_ID.xlsx
         Set Global Variable    ${report_id}
     END
     
@@ -254,7 +254,9 @@ Smoke_WEB_MED_098_NEWREPORT_01
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
+    Clean ID Excel    Data_ID.xlsx
     Read Report Excel    Smoke_WEB_MED_098_NEWREPORT_01.xlsx
+
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
 
@@ -272,6 +274,7 @@ Smoke_WEB_MED_098_NEWREPORT_01
             
         END
         # 測試2 增修
+        Read ID Excel    Data_ID.xlsx
         Read Update Excel    Smoke_WEB_MED_098_NEWREPORT_01.xlsx
         FOR    ${update}    IN    @{test_update}
             FOR    ${id}    IN    @{test_id}
@@ -281,15 +284,11 @@ Smoke_WEB_MED_098_NEWREPORT_01
                     Run Keyword If    ${item_result} == ${False}
                     ...    Capture Page Screenshot    ${screenshot}\\098_report_MED_UPDATE_${update}[Num]_Error.png
 
-                    Clear Error
-                
+                    Clear Error                
                 END
-                
-            END
-            
+            END       
             
         END
-
         # 測試3 研判
         Run Keyword And Ignore Error    Logout
     END

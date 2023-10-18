@@ -18,16 +18,6 @@ ${num}
 ${report_id}
 
 *** Keywords ***
-Read Excel
-    Open Workbook    testdata\\Smoke_WEB_MED_100_NEWREPORT_01.xlsx
-    ${sheet1}    Read Worksheet    name=login    header=True
-    ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
-    Log To Console    \r\n${sheet1}\r\n${sheet2}
-    Close Workbook
-    Set Global Variable    ${test_users}    ${sheet1}
-    Set Global Variable    ${test_reports}    ${sheet2}
-
->>>>>>> 840fa7538067723a5215a44f4ad42bb88a9bd41f
 COMMON REPORT
     [Arguments]    ${element}
     ${tmpday}    Get Taiwain Date String    -2
@@ -251,7 +241,7 @@ Update Report
     #Press Keys    id=quick_search_field    CTRL+v
     
     Click Element    id=quick_search_field
-    Input Text    id=quick_search_field    ${element}[REPORT_ID]
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
     
     Click Element    //*[@id="headersearch"]/div
     Sleep    2s
@@ -276,6 +266,7 @@ Smoke_WEB_MED_100_NEWREPORT_01
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
+    Clean ID Excel    Data_ID.xlsx
     Read Report Excel    Smoke_WEB_MED_100_NEWREPORT_01.xlsx
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
@@ -295,6 +286,7 @@ Smoke_WEB_MED_100_NEWREPORT_01
         END
         
         # 測試2 增修
+        Read ID Excel    Data_ID.xlsx
         Read Update Excel    Smoke_WEB_MED_100_NEWREPORT_01.xlsx
         FOR    ${update}    IN    @{test_update}
             FOR    ${id}    IN    @{test_id}
