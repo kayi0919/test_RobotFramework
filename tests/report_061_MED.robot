@@ -11,6 +11,7 @@ Resource   ..\\keywords\\Variables.robot
 ${screenshot}
 ${test_users}
 ${test_reports}
+${test_id}
 ${test_update}
 ${item_result}
 ${num}
@@ -19,20 +20,6 @@ ${report_id}
 
 
 *** Keywords ***
-<<<<<<< HEAD
-=======
-Read Excel
-    Open Workbook    testdata\\Smoke_WEB_MED_061_NEWREPORT_02.xlsx
-    ${sheet1}    Read Worksheet    name=login    header=True
-    ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
-    Log To Console    \r\n${sheet1}\r\n${sheet2}
-    Close Workbook
-    Set Global Variable    ${test_users}    ${sheet1}
-    Set Global Variable    ${test_reports}    ${sheet2}
-
-
-
->>>>>>> 840fa7538067723a5215a44f4ad42bb88a9bd41f
 COMMON REPORT
     [Arguments]    ${element}
     ${tmpday}    Get Taiwain Date String    -2
@@ -269,8 +256,7 @@ COMMON REPORT
     END
 
 
-    # 新增
-    # 確定通報
+    # 新增通報
     IF    ${element}[FUNCTION] == 1
         Create Data
         ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
@@ -282,29 +268,20 @@ COMMON REPORT
 
         Set Global Variable    ${item_result}    ${True}
         #讀取編號
-        Write Excel    ${report_id}    Smoke_WEB_MED_061_NEWREPORT_01.xlsx
+        Write Excel    ${report_id}    ${element}[Num]    Smoke_WEB_MED_061_NEWREPORT_01.xlsx
         Set Global Variable    ${report_id}
-    END
-
-    #增修
-    IF    ${element}[FUNCTION] == 2
-        Update Data
-        Wait Until Page Contains    ${element}[REPORT_ID]
-        Sleep    1s
-        Capture Page Screenshot    ${screenshot}\\061_report_MED_Update_${element}[Num].png
-        Set Global Variable    ${item_result}    ${True}
     END
 
 Update Report
     #增修資料(不修改地址)
-    [Arguments]    ${element}
+    [Arguments]    ${element}    ${element_id}
     
     #成功頁面複製編號
     #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #只執行增修功能 此行需註解
     #Press Keys    id=quick_search_field    CTRL+v
     
     Click Element    id=quick_search_field
-    Input Text    id=quick_search_field    ${element}[REPORT_ID]
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
     
     Click Element    //*[@id="headersearch"]/div
     Sleep    2s
@@ -313,6 +290,12 @@ Update Report
     Sleep    2s
     #資料增修
     COMMON REPORT    ${element}
+    #增修通報
+    Update Data
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    Sleep    1s
+    Capture Page Screenshot    ${screenshot}\\061_report_MED_Update_${element}[Num].png
+    Set Global Variable    ${item_result}    ${True}
 
 
 
@@ -326,35 +309,37 @@ Smoke_WEB_MED_061_NEWREPORT_02
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Read Report Excel    Smoke_WEB_MED_061_NEWREPORT_01.xlsx
     # 清除截圖路徑
-    #Remove Directory    ${screenshot}    resource=true
-<<<<<<< HEAD
-
-=======
->>>>>>> 840fa7538067723a5215a44f4ad42bb88a9bd41f
+    Remove Directory    ${screenshot}    resource=true
 
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}
 
         # 測試1 新增
-        # FOR    ${report}    IN    @{test_reports}
-        #     Run Keyword And Continue On Failure    COMMON REPORT    ${report}
+        FOR    ${report}    IN    @{test_reports}
+            Run Keyword And Continue On Failure    COMMON REPORT    ${report}
             
-        #     Run Keyword If    ${item_result} == ${False}
-        #     ...    Capture Page Screenshot    ${screenshot}\\061_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
+            Run Keyword If    ${item_result} == ${False}
+            ...    Capture Page Screenshot    ${screenshot}\\061_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
 
-        #     Clear Error
+            Clear Error
             
-        # END
+        END
         
         # 測試2 增修
         Read Update Excel    Smoke_WEB_MED_061_NEWREPORT_01.xlsx
         FOR    ${update}    IN    @{test_update}
-            Run Keyword And Continue On Failure    Update Report    ${update}
-            
-            Run Keyword If    ${item_result} == ${False}
-            ...    Capture Page Screenshot    ${screenshot}\\061_report_MED_UPDATE_${update}[Num]_Error.png
+            FOR    ${id}    IN    @{test_id}
+                IF    ${id}[Num] == ${update}[Num]
+                    Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
+                    
+                    Run Keyword If    ${item_result} == ${False}
+                    ...    Capture Page Screenshot    ${screenshot}\\061_report_MED_UPDATE_${update}[Num]_Error.png
 
-            Clear Error
+                    Clear Error
+                
+                END
+                
+            END
         END
 
         # 測試3 研判

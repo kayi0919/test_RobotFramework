@@ -76,18 +76,22 @@ Read Report Excel
     Set Global Variable    ${test_users}    ${sheet1}
     Set Global Variable    ${test_reports}    ${sheet2}
 
+    
 Read Update Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
-    ${sheet3}=    Read Worksheet    name=update   header=True    start=3
-    Log To Console    \r\n${sheet3}
+    ${sheet3}=    Read Worksheet    name=ID   header=True    start=3
+    ${sheet4}=    Read Worksheet    name=update   header=True    start=3
+    Log To Console    \r\n${sheet3}\r\n${sheet4}
     Close Workbook
-    Set Global Variable    ${test_update}    ${sheet3}
+    Set Global Variable    ${test_id}    ${sheet3}
+    Set Global Variable    ${test_update}    ${sheet4}
+    
 
 Write Excel
-    [Arguments]    ${data_id}    ${file}
+    [Arguments]    ${data_id}    ${data_num}    ${file}
     Open Workbook    testdata\\${file}
-    ${table}    Create Dictionary    產生編號=${data_id}
+    ${table}    Create Dictionary    報表編號=${data_id}    序號=${data_num}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
     Close Workbook

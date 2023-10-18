@@ -12,6 +12,7 @@ Resource   ..\\keywords\\Variables.robot
 ${screenshot}
 ${test_users}
 ${test_reports}
+${test_id}
 ${test_update}
 ${item_result}
 ${num}
@@ -283,8 +284,7 @@ COMMON REPORT
     END
 
 
-    # 新增
-    # 確定通報
+    # 新增通報
     IF    ${element}[FUNCTION] == 1
         Create Data
         ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
@@ -296,30 +296,21 @@ COMMON REPORT
 
         Set Global Variable    ${item_result}    ${True}
         #讀取編號
-        Write Excel    ${report_id}    Smoke_WEB_MED_19CVS_NEWREPORT_01.xlsx
+        Write Excel    ${report_id}    ${element}[Num]    Smoke_WEB_MED_19CVS_NEWREPORT_01.xlsx
         Set Global Variable    ${report_id}
-    END
-
-    #增修
-    IF    ${element}[FUNCTION] == 2
-        Update Data
-        Wait Until Page Contains    ${element}[REPORT_ID]
-        Sleep    1s
-        Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_${element}[Num].png
-        Set Global Variable    ${item_result}    ${True}
     END
 
 
 Update Report
     #增修資料(不修改地址)
-    [Arguments]    ${element}
+    [Arguments]    ${element}    ${element_id}
     
     #成功頁面複製編號
     #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #只執行增修功能 此行需註解
     #Press Keys    id=quick_search_field    CTRL+v
     
     Click Element    id=quick_search_field
-    Input Text    id=quick_search_field    ${element}[REPORT_ID]
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
     
     Click Element    //*[@id="headersearch"]/div
     Sleep    2s
@@ -328,6 +319,12 @@ Update Report
     Sleep    2s
     #資料增修
     COMMON REPORT    ${element}
+    #增修通報
+    Update Data
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    Sleep    1s
+    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_${element}[Num].png
+    Set Global Variable    ${item_result}    ${True}
 
 
 *** Tasks ***
@@ -345,25 +342,31 @@ Smoke_WEB_MED_19CVS_NEWREPORT_01
         Login    ${element}    ${NIDRS_WEB_URL}
 
         # 測試1 新增
-        # FOR    ${report}    IN    @{test_reports}
-        #     Run Keyword And Continue On Failure    COMMON REPORT    ${report}
+        FOR    ${report}    IN    @{test_reports}
+            Run Keyword And Continue On Failure    COMMON REPORT    ${report}
             
-        #     Run Keyword If    ${item_result} == ${False}
-        #     ...    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
+            Run Keyword If    ${item_result} == ${False}
+            ...    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
 
-        #     Clear Error
+            Clear Error
             
-        # END
+        END
         
         # 測試2 增修
         Read Update Excel    Smoke_WEB_MED_19CVS_NEWREPORT_01.xlsx
         FOR    ${update}    IN    @{test_update}
-            Run Keyword And Continue On Failure    Update Report    ${update}
-            
-            Run Keyword If    ${item_result} == ${False}
-            ...    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_UPDATE_${update}[Num]_Error.png
+            FOR    ${id}    IN    @{test_id}
+                IF    ${id}[Num] == ${update}[Num]
+                    Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
+                    
+                    Run Keyword If    ${item_result} == ${False}
+                    ...    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_UPDATE_${update}[Num]_Error.png
 
-            Clear Error
+                    Clear Error
+                
+                END
+                
+            END
         END
 
         # 測試3 研判
