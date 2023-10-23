@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation    醫療院所通報測試-鉤端螺旋體病
+Documentation    醫療院所通報測試-阿米巴性痢疾
 Library    RPA.Browser.Selenium
 Library    RPA.Excel.Files
 Library    String
@@ -14,7 +14,7 @@ ${test_reports}
 ${test_id}
 ${test_update}
 ${item_result}
-${num}
+${item_num}
 ${report_id}
 
 *** Keywords ***
@@ -22,7 +22,7 @@ COMMON REPORT
     [Arguments]    ${element}
     ${tmpday}    Get Taiwain Date String    -2
     
-    Set Global Variable    ${num}    ${element}[Num]
+    Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
     Sleep    1s
     IF    ${element}[FUNCTION] == 1
@@ -30,18 +30,19 @@ COMMON REPORT
         Click Element    id=101        
     END   
     Sleep    1s
+    # 診斷醫師
     Diagnostician    ${element}
+    # 身分證統一編號
     IDNO    ${element}
+    # 個案姓名
     Name    ${element}
-
-    #羅馬拼音
+    # 羅馬拼音    
     Romanization    ${element}
-
-    #性別
+    # 性別
     Gender    ${element}
-    
+    # 出生日期
     Birthday    ${element}
-    #本國籍
+    # 本國籍
     Nationality    ${element}
     
     #手機/聯絡電話欄位因為有重複定義的element id, 改以xpath處理
@@ -234,6 +235,7 @@ COMMON REPORT
     END
     
     # 新增通報
+    Set Global Variable    ${item_function}    ${element}[FUNCTION]
     IF    ${element}[FUNCTION] == 1
         Create Data
         ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
@@ -245,13 +247,14 @@ COMMON REPORT
 
         Set Global Variable    ${item_result}    ${True}
         #讀取編號
-        Write Excel    ${report_id}    ${element}[Num]    Smoke_WEB_MED_006_NEWREPORT_01.xlsx
+        Write ID Excel    ${report_id}    ${element}[Num]    Data_ID.xlsx
         Set Global Variable    ${report_id}
     END
 
 Update Report
     #增修資料(不修改地址)
     [Arguments]    ${element}    ${element_id}
+    Set Global Variable    ${item_result}    ${False}
     
     #成功頁面複製編號
     #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #只執行增修功能 此行需註解
@@ -282,7 +285,8 @@ Smoke_WEB_MED_006_NEWREPORT_01
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
-    Clean ID Excel    Data_ID.xlsx
+    Clean Excel    Data_ID.xlsx
+    Clean Excel    Data_Result.xlsx
     Read Report Excel    Smoke_WEB_MED_006_NEWREPORT_01.xlsx
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
@@ -298,7 +302,7 @@ Smoke_WEB_MED_006_NEWREPORT_01
             ...    Capture Page Screenshot    ${screenshot}\\006_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
 
             Clear Error
-            
+            Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
         END
         
         # 測試2 增修
@@ -313,7 +317,7 @@ Smoke_WEB_MED_006_NEWREPORT_01
                     ...    Capture Page Screenshot    ${screenshot}\\006_report_MED_UPDATE_${update}[Num]_Error.png
 
                     Clear Error
-                
+                    Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
                 END
                 
             END

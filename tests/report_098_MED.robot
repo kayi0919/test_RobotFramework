@@ -1,5 +1,5 @@
 *** Settings ***
-Documentation    醫療院所通報測試-梅毒
+Documentation    醫療院所通報測試-淋病
 Library    RPA.Browser.Selenium
 Library    RPA.Excel.Files
 Library    String
@@ -16,7 +16,8 @@ ${test_reports}
 ${test_id}
 ${test_update}
 ${item_result}
-${num}
+${item_function}
+${item_num}
 ${report_id}
 
 
@@ -25,7 +26,7 @@ COMMON REPORT
     [Arguments]    ${element}
     ${tmpday}    Get Taiwain Date String    -2
     
-    Set Global Variable    ${num}    ${element}[Num]
+    Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
     Sleep    1s
     IF    ${element}[FUNCTION] == 1
@@ -33,48 +34,44 @@ COMMON REPORT
         Click Element    id=101        
     END    
     Sleep    1s
+    # 診斷醫師
     Diagnostician    ${element}
+    # 身分證統一編號
     IDNO    ${element}
+    # 個案姓名
     Name    ${element}
-    #羅馬拼音    
+    # 羅馬拼音    
     Romanization    ${element}
-
-    #性別
+    # 性別
     Gender    ${element}
-    
+    # 出生日期
     Birthday    ${element}
-    #本國籍
+    # 本國籍
     Nationality    ${element}
     
     #手機/聯絡電話欄位因為有重複定義的element id, 改以xpath處理
     #Input Text    id=casePatient_MobilePhone_0    ${element}[CELLPHONE]
     CellPhone    ${element}
     ContactPhone    ${element}
+    #居住縣市
     County    ${element}    
     # 出現list無內容的異常
     # 這邊click是為了觸發list重新更新
+    # 鄉鎮市區
     Town    ${element}
-
     #居住村里
     Village    ${element}
-
     #街道地址
     Address    ${element}
-
     #人口密集機構
     Institutions    ${element}
-
     #機構類別
     Ins_Catrgory    ${element}
-
     #婚姻狀況
     Marriage    ${element}
-
     #病患動向    
     CasePatient    ${element}      
     Sleep    2s
-    
-
     # 是否死亡
     # 要先focus在此區域,選是否才沒有出現異常
     Death    ${element}
@@ -97,7 +94,6 @@ COMMON REPORT
         Sleep    1s   
     END
     
-
     # 發病日/無發病日區塊
     IF    '${element}[NO_SICKDAY]' != 'None'
         IF    ${element}[NO_SICKDAY] == $True
@@ -119,7 +115,6 @@ COMMON REPORT
         ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
         Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
     END
-
 
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
@@ -145,12 +140,14 @@ COMMON REPORT
         ELSE
             Click Element    //*[@id="ReportDisease_symp"]/div[2]/label
         END
-        # 臨床診斷感染淋病
-        Click Element    //label[@for="ReportDisease_098_S_Q000980001_AS09800001"]
-        Sleep    1s        
-    END
         
-
+        IF    ${element}[FUNCTION] == 1
+            # 臨床診斷感染淋病
+            Click Element    //label[@for="ReportDisease_098_S_Q000980001_AS09800001"]
+            Sleep    1s  
+        END
+              
+    END
     
     # 具備一種以上淋病雙球菌實驗室診斷
     IF    '${element}[CHECK_FIELD]' != 'None'
@@ -204,6 +201,7 @@ COMMON REPORT
 
     
     # 新增通報
+    Set Global Variable    ${item_function}    ${element}[FUNCTION]
     IF    ${element}[FUNCTION] == 1
         Create Data
         ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
@@ -215,25 +213,26 @@ COMMON REPORT
 
         Set Global Variable    ${item_result}    ${True}
         #讀取編號
-        Write Excel    ${report_id}    ${element}[Num]    Data_ID.xlsx
+        Write ID Excel    ${report_id}    ${element}[Num]    Data_ID.xlsx
         Set Global Variable    ${report_id}
     END
     
     
     
 Update Report
-    #增修資料(不修改地址)
+    #增修資料
     [Arguments]    ${element}    ${element_id}
+    Set Global Variable    ${item_result}    ${False}
     
     #成功頁面複製編號
-    #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #只執行增修功能 此行需註解
+    #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #點複製圖案
     #Press Keys    id=quick_search_field    CTRL+v
     
     Click Element    id=quick_search_field
     Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
     
     Click Element    //*[@id="headersearch"]/div
-    Sleep    1s
+    Sleep    3s
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
     Sleep    1s
@@ -254,7 +253,8 @@ Smoke_WEB_MED_098_NEWREPORT_01
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
-    Clean ID Excel    Data_ID.xlsx
+    Clean Excel    Data_ID.xlsx
+    Clean Excel    Data_Result.xlsx
     Read Report Excel    Smoke_WEB_MED_098_NEWREPORT_01.xlsx
 
     # 清除截圖路徑
@@ -271,6 +271,7 @@ Smoke_WEB_MED_098_NEWREPORT_01
             ...    Capture Page Screenshot    ${screenshot}\\098_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
 
             Clear Error
+            Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
             
         END
         # 測試2 增修
@@ -284,7 +285,8 @@ Smoke_WEB_MED_098_NEWREPORT_01
                     Run Keyword If    ${item_result} == ${False}
                     ...    Capture Page Screenshot    ${screenshot}\\098_report_MED_UPDATE_${update}[Num]_Error.png
 
-                    Clear Error                
+                    Clear Error
+                    Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
                 END
             END       
             

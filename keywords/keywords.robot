@@ -76,12 +76,13 @@ Read Report Excel
     Set Global Variable    ${test_users}    ${sheet1}
     Set Global Variable    ${test_reports}    ${sheet2}
 
-Clean ID Excel
+Clean Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
     Delete Rows    start=4    end=100
     Save Workbook
     Close Workbook
+
 
 Read ID Excel
     [Arguments]    ${file}
@@ -100,10 +101,18 @@ Read Update Excel
     Set Global Variable    ${test_update}    ${sheet4}
     
 
-Write Excel
+Write ID Excel
     [Arguments]    ${data_id}    ${data_num}    ${file}
     Open Workbook    testdata\\${file}
     ${table}    Create Dictionary    報表編號=${data_id}    序號=${data_num}
+    Append Rows To Worksheet    ${table}    start=4
+    Save Workbook
+    Close Workbook
+
+Write Result Excel
+    [Arguments]    ${data_function}    ${data_num}    ${data_result}    ${file}
+    Open Workbook    testdata\\${file}
+    ${table}    Create Dictionary    功能=${data_function}    序號=${data_num}    結果=${data_result}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
     Close Workbook
@@ -125,14 +134,12 @@ Name
         Input Text    id=casePatient_Name    ${element}[NAME]        
     END
 
-#非必填: 姓名羅馬拼音
 Romanization
     [Arguments]    ${element}
     IF    '${element}[ROMANIZATION_NAME]' != 'None'    
         Input Text    id=casePatient_Spell    ${element}[ROMANIZATION_NAME]
     END
 
-#非必填: 性別
 Gender
     [Arguments]    ${element}
     IF    '${element}[GENDER]' != 'None'
@@ -155,7 +162,7 @@ Birthday
         Input Text    id=casePatient_Birthdate    ${element}[BIRTHDAY]        
     END
 
-#非必填: 國籍
+
 Nationality
     [Arguments]    ${element}
     IF    '${element}[NATIONALITY]' != 'None'
@@ -215,7 +222,6 @@ Town
         Select From List By Label    id=casePatient_Living_Town    ${element}[TOWN]
     END
 
-#非必填: 居住村里
 Village
     [Arguments]    ${element}
     IF    '${element}[VILLAGE]' != 'None'
@@ -224,14 +230,12 @@ Village
         Select From List By Label    id=casePatient_Living_Village    ${element}[VILLAGE]
     END
 
-#非必填: 街道地址
 Address
     [Arguments]    ${element}
     IF    '${element}[ADDRESS]' != 'None'
         Input Text    id=casePatient_Living_Address    ${element}[ADDRESS]
     END
 
-#非必填: 人口密集機構
 Institutions
     [Arguments]    ${element}
     Click Element    //*[@id="casePatient_Form"]/div[4]/div[1]/div
@@ -243,7 +247,7 @@ Institutions
         END
     END
 
-#非必填: 機構類別
+
 Ins_Catrgory
     [Arguments]    ${element}
     IF    '${element}[INSTITUTIONS_CATEGORY]' != 'None'
@@ -252,7 +256,7 @@ Ins_Catrgory
         Select From List By Label    id=casePatient_FacilityType    ${element}[INSTITUTIONS_CATEGORY]
     END
 
-#非必填: 婚姻狀況
+
 Marriage
     [Arguments]    ${element}
     IF    '${element}[MARRIAGE]' != 'None'
@@ -262,7 +266,7 @@ Marriage
     END
 
 
-#非必填: 病患動向 
+
 CasePatient
     [Arguments]    ${element}
     IF    '${element}[CASEPATIENT]' != 'None'
@@ -343,7 +347,7 @@ Search Type
             Sleep    2s
 
 
-# 必填: 個案是否死亡
+
 Death
     [Arguments]    ${element}
     IF    '${element}[DEATH]' != 'None'
@@ -353,7 +357,7 @@ Death
             ${tmpday}    Get Taiwain Date String    ${element}[DEATH_DAY]
             Input Text    //*[@id="casePatient_DateOfDead"]   ${tmpday}
             
-            #目前只設定一個死亡原因
+            #只設定一個死亡原因
             IF    '${element}[DEATH_REASON]' != 'None'
                 Input Text    id=casePatient_DeadReason_A    ${element}[DEATH_REASON]            
             END
@@ -363,7 +367,6 @@ Death
     END
     
 
-# 必填: 旅遊史
 Travel_History
     [Arguments]    ${element}
     IF    '${element}[HAS_TRAVEL_HISTORY]' != 'None'
@@ -414,9 +417,9 @@ Travel_History
 Create Data
     Click Button    //*[@id="buttonReportSend"]
     Wait Until Page Contains    確認是否送出通報單
-    Sleep    200ms
+    Sleep    1s
     Click Button    //*[@id="_dialog"]/div/div/div[3]/div[1]/button
-    Sleep    100ms
+    Sleep    1s
 
     # 通報完成頁
     Wait Until Page Contains    法定傳染病個案通報完成
@@ -437,7 +440,7 @@ Update Data
     Click Button    //div[@id="editFieldConfirmModal"]/div/div/div/button[1]
     Sleep    1s
 
-    Wait Until Page Contains    增修完成
+    Wait Until Page Contains    關閉
     Sleep    1s
     Click Element    //div[@id="alertDialog"]/div/div/div[3]/div/a
 
@@ -453,8 +456,8 @@ Clear Error
     Sleep    200ms
     # 如果有錯誤 關掉dialog
     ${checkdata}    Does Page Contain Element    //div[@id="alertDialog"]
-    Run Keyword If    ${checkdata} == ${True}    
-    ...    Click Element    //*[@id="alertDialog"]/div/div/div[3]/div/a
+    Run Keyword If    ${checkdata} == ${True}
+    ...    Click Element    //div[@id="alertDialog"]/div/div/div[3]/div/a
     
     # 滾回頂端
     Scroll Element Into View    //*[@id="child-item"]/li[1]/a

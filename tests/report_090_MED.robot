@@ -14,7 +14,8 @@ ${test_reports}
 ${test_id}
 ${test_update}
 ${item_result}
-${num}
+${item_function}
+${item_num}
 ${report_id}
 
 
@@ -24,7 +25,7 @@ COMMON REPORT
     [Arguments]    ${element}
     ${tmpday}    Get Taiwain Date String    -2
     
-    Set Global Variable    ${num}    ${element}[Num]
+    Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
     Sleep    1s
     IF    ${element}[FUNCTION] == 1
@@ -282,6 +283,7 @@ COMMON REPORT
 
 
     # 新增通報
+    Set Global Variable    ${item_function}    ${element}[FUNCTION]
     IF    ${element}[FUNCTION] == 1
         Create Data
         ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
@@ -293,7 +295,7 @@ COMMON REPORT
 
         Set Global Variable    ${item_result}    ${True}
         #讀取編號
-        Write Excel    ${report_id}    ${element}[Num]    Smoke_WEB_MED_090_NEWREPORT_01.xlsx
+        Write ID Excel    ${report_id}    ${element}[Num]    Data_ID.xlsx
         Set Global Variable    ${report_id}
     END
 
@@ -301,6 +303,7 @@ COMMON REPORT
 Update Report
     #增修資料(不修改地址)
     [Arguments]    ${element}    ${element_id}
+    Set Global Variable    ${item_result}    ${False}
     
     #成功頁面複製編號
     #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #只執行增修功能 此行需註解
@@ -331,7 +334,8 @@ Smoke_WEB_MED_090_NEWREPORT_01
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
-    Clean ID Excel    Data_ID.xlsx
+    Clean Excel    Data_ID.xlsx
+    Clean Excel    Data_Result.xlsx
     Read Report Excel    Smoke_WEB_MED_090_NEWREPORT_01.xlsx
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
@@ -348,6 +352,8 @@ Smoke_WEB_MED_090_NEWREPORT_01
             ...    Capture Page Screenshot    ${screenshot}\\090_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
 
             Clear Error
+            Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
+            
             
         END
         
@@ -363,7 +369,7 @@ Smoke_WEB_MED_090_NEWREPORT_01
                     ...    Capture Page Screenshot    ${screenshot}\\090_report_MED_UPDATE_${update}[Num]_Error.png
 
                     Clear Error
-                
+                    Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
                 END
                 
             END
