@@ -82,21 +82,7 @@ COMMON REPORT
 
     # 選擇疾病
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
-    IF    '${element}[DISEASE_CATEGORY]' != 'None'
-        Click Button    //*[@id="choose_diseases"]
-        Wait Until Page Contains    依法定傳染病
-        Sleep    1s
-        Click Element    //*[@id="nav-category-${element}[DISEASE_CATEGORY]"]
-        Sleep    1s
-        Click Element    //label[@for="category_disease_${element}[DISEASE]"]
-        Sleep    1s
-        # 確認
-        Click Button    //*[@id="modalDiseaseSelector"]/div/div/div[3]/button[1]
-        Sleep    1s
-        # 下一步
-        Click Button    id=selectedDiseaseNextStep
-        Sleep    1s   
-    END
+    Disease Category    ${element}
 
     # 發病日/無發病日區塊
     IF    '${element}[NO_SICKDAY]' != 'None'
@@ -318,7 +304,7 @@ Update Report
     Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
     
     Click Element    //*[@id="headersearch"]/div
-    Sleep    2s
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
     Sleep    2s
@@ -341,25 +327,39 @@ Smoke_WEB_MED_044_NEWREPORT_01
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
-    #Clean Excel    Data_ID.xlsx
+    Clean Excel    Data_ID.xlsx
     Clean Excel    Data_Result.xlsx
     Read Report Excel    Smoke_WEB_MED_044_NEWREPORT_01.xlsx
+
+    # 路徑不見處理 新增路徑
+    Create Directory    ${screenshot}    resource=false
     # 清除截圖路徑
-    #Remove Directory    ${screenshot}    resource=true
+    Remove Directory    ${screenshot}    resource=true
 
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}
 
         # 測試1 新增
         FOR    ${report}    IN    @{test_reports}
-            Run Keyword And Continue On Failure    COMMON REPORT    ${report}
-            
-            Run Keyword If    ${item_result} == ${False}
-            ...    Capture Page Screenshot    ${screenshot}\\044_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
-
+            TRY
+                Run Keyword And Continue On Failure    COMMON REPORT    ${report}
+                Write Result Excel    ${item_function}    ${item_num}    ${report}[EXPECTED]    ${item_result}    Data_Result.xlsx
+                
+                Run Keyword If    ${item_result} == ${False}
+                ...    Capture Page Screenshot    ${screenshot}\\044_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
+                
+                # 預期False 結果Pass
+                # 若這裡錯誤會再執行except一次
+                IF    ${item_result} != ${report}[EXPECTED]
+                    Run Keyword And Continue On Failure    Fail    功能:${report}[FUNCTION] 序號:${report}[Num]預期錯誤
+                END
+            EXCEPT
+                # 預期Pass 結果False
+                IF    ${item_result} != ${report}[EXPECTED]
+                    Run Keyword And Continue On Failure    Fail    功能:${report}[FUNCTION] 序號:${report}[Num]預期錯誤
+                END                
+            END
             Clear Error
-            Write Result Excel    ${item_function}    ${item_num}    ${item_result}    Data_Result.xlsx
-            
         END
         
         # 測試2 增修
@@ -368,13 +368,24 @@ Smoke_WEB_MED_044_NEWREPORT_01
         FOR    ${update}    IN    @{test_update}
             FOR    ${id}    IN    @{test_id}
                 IF    ${id}[Num] == ${update}[Num]
-                    Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
-                    
-                    Run Keyword If    ${item_result} == ${False}
-                    ...    Capture Page Screenshot    ${screenshot}\\044_report_MED_UPDATE_${update}[Num]_Error.png
-
+                    TRY
+                        Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
+                        Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
+                        Run Keyword If    ${item_result} == ${False}
+                        ...    Capture Page Screenshot    ${screenshot}\\044_report_MED_UPDATE_${update}[Num]_Error.png
+                        
+                        # 預期False 結果Pass
+                        # 若這裡錯誤會再執行except一次
+                        IF    ${item_result} != ${update}[EXPECTED]                            
+                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                        END
+                    EXCEPT
+                        # 預期Pass 結果False
+                        IF    ${item_result} != ${update}[EXPECTED]                            
+                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                        END                        
+                    END
                     Clear Error
-                    Write Result Excel    ${update}[FUNCTION]    ${update}[Num]    ${item_result}    Data_Result.xlsx
                 END
                 
             END
@@ -382,6 +393,7 @@ Smoke_WEB_MED_044_NEWREPORT_01
 
         # 測試3 研判
         Run Keyword And Ignore Error    Logout
+        Sleep    3s
     END
     
 

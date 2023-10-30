@@ -110,9 +110,9 @@ Write ID Excel
     Close Workbook
 
 Write Result Excel
-    [Arguments]    ${data_function}    ${data_num}    ${data_result}    ${file}
+    [Arguments]    ${data_function}    ${data_num}    ${data_expected}    ${data_result}    ${file}
     Open Workbook    testdata\\${file}
-    ${table}    Create Dictionary    功能=${data_function}    序號=${data_num}    結果=${data_result}
+    ${table}    Create Dictionary    功能=${data_function}    序號=${data_num}    預期=${data_expected}    結果=${data_result}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
     Close Workbook
@@ -352,6 +352,7 @@ Death
     [Arguments]    ${element}
     IF    '${element}[DEATH]' != 'None'
         Click Element    //*[@id="casePatient_isDead"]
+        Wait Until Page Contains    個案是否死亡
         IF    ${element}[DEATH] == $True
             Click Element    //label[@for="casePatient_isDead_True"]
             ${tmpday}    Get Taiwain Date String    ${element}[DEATH_DAY]
@@ -364,6 +365,24 @@ Death
         ELSE
             Click Element    //label[@for="casePatient_isDead_False"]
         END        
+    END
+
+Disease Category
+    [Arguments]    ${element}
+    IF    '${element}[DISEASE_CATEGORY]' != 'None'
+        Click Button    //*[@id="choose_diseases"]
+        Wait Until Page Contains    依法定傳染病
+        Sleep    1s
+        Click Element    //*[@id="nav-category-${element}[DISEASE_CATEGORY]"]
+        Wait Until Page Contains    ${element}[DISEASE_NAME]
+        Click Element    //label[@for="category_disease_${element}[DISEASE]"]
+        Sleep    1s
+        # 確認
+        Click Button    //*[@id="modalDiseaseSelector"]/div/div/div[3]/button[1]
+        Sleep    1s
+        # 下一步
+        Click Button    id=selectedDiseaseNextStep
+        Sleep    1s   
     END
     
 

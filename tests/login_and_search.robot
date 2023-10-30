@@ -21,7 +21,7 @@ Read Excel
 Report Search
     [Arguments]    ${element}
     # 等待使用者單位顯示
-    Wait Until Element Contains    id=navbarDropdownUser2    ${element}[Expected] 
+    Wait Until Page Contains    通報單查詢管理
     Sleep    200ms
     
     # 點擊通報單查詢管理
@@ -37,13 +37,13 @@ Report Search
     ${element_exists}    Run Keyword And Return Status    Page Should Contain Element    xpath=/html/body/div[8]/div/div/div[3]
     Log To Console    是否無資料?${element_exists}
     Run Keyword If    ${element_exists}    Click Element    xpath=/html/body/div[8]/div/div/div[3]/div/a
+    Wait Until Element Contains    id=navbarDropdownUser2    ${element}[Expected]
 
 *** Tasks ***
 Smoke Test Login And Query
     [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
-    #open_browser_in_py
     Read Excel
 
     FOR    ${element}    IN    @{test_users}
@@ -51,7 +51,7 @@ Smoke Test Login And Query
         TRY
             Report Search    ${element}
         EXCEPT
-            Log To Console    message
+            Run Keyword And Continue On Failure    Fail    ${element}預期錯誤 
         END
         Logout
     END
