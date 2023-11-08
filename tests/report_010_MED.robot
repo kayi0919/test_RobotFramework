@@ -86,26 +86,13 @@ COMMON REPORT
     Disease Category    ${element}
 
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    ${element}[DIAGNOSE_DAY] != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
 
     # 登記類別
     IF    '${element}[INFECTED_STATUS]' != 'None'
@@ -146,6 +133,8 @@ COMMON REPORT
         IF    ${element}[XRAY_DIAGNOSIS_TYPE] == 1
             ${tmpday}    Get Taiwain Date String    ${element}[XRAY_DIAGNOSIS_DATE]
             Input Text    //*[@id="ReportDisease_010_S_XRAY_DIAGNOSIS_DATE"]    ${tmpday}
+            Sleep    1s
+            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
         ELSE
             Click Element    id=ReportDisease_010_S_010_sameDiagnoseDay
         END    
@@ -180,6 +169,8 @@ COMMON REPORT
         IF    ${element}[SAMPLE_TYPE_CHOICE] == 1
             ${tmpday}    Get Taiwain Date String    ${element}[SAMPLE_TYPE_DATE]
             Input Text    //*[@id="ReportDisease_010_S_ReportTBSample_F_SAMPLE_CHK_DATE_0"]    ${tmpday}
+            Sleep    1s
+            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
         ELSE
             Click Element    //*[@id="ReportTBSample_0"]/div[2]/div/div/div/div/a
             
@@ -367,7 +358,9 @@ COMMON REPORT
     # HIV檢驗日期
     IF    '${element}[HIV_TEST_DATE]' != 'None'
         ${tmpday}    Get Taiwain Date String    ${element}[HIV_TEST_DATE]
-        Input Text    //*[@id="ReportDisease_010_S_HIV_TEST_DATE"]    ${tmpday}        
+        Input Text    //*[@id="ReportDisease_010_S_HIV_TEST_DATE"]    ${tmpday}
+        Sleep    1s
+        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]        
     END
     
 
@@ -395,7 +388,9 @@ COMMON REPORT
     # TB開始用藥日
     IF    '${element}[TB_MEDICINE_USE_DATE]' != 'None'
         ${tmpday}    Get Taiwain Date String    ${element}[TB_MEDICINE_USE_DATE]
-        Input Text    //*[@id="ReportDisease_010_S_TB_MEDICINE_USE_DATE"]    ${tmpday}        
+        Input Text    //*[@id="ReportDisease_010_S_TB_MEDICINE_USE_DATE"]    ${tmpday}
+        Sleep    1s
+        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]        
     END
 
     # 歷史用藥情形
@@ -417,7 +412,9 @@ COMMON REPORT
     # 症狀起始日
     IF    '${element}[TB_SYMPTOM_START_DATE]' != 'None'
         ${tmpday}    Get Taiwain Date String    ${element}[TB_SYMPTOM_START_DATE]
-        Input Text    //*[@id="ReportDisease_010_S_TB_SYMPTOM_START_DATE"]    ${tmpday} 
+        Input Text    //*[@id="ReportDisease_010_S_TB_SYMPTOM_START_DATE"]    ${tmpday}
+        Sleep    1s
+        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2] 
     END
     
     #增修原因

@@ -85,27 +85,13 @@ COMMON REPORT
     Disease Category    ${element}
 
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
-    
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
     
 
 
@@ -154,6 +140,8 @@ COMMON REPORT
             Input Text    //input[@id="ReportDisease_19CVS_S_QS19CVS334_AS19CVS334"]    ${element}[RAPID_TEST_COMPANY]
             ${tmpday}    Get Taiwain Date String    ${element}[RAPID_TEST_REPORT_DATE]
             Input Text    //*[@id="ReportDisease_19CVS_S_QS19CVS335_AS19CVS335"]    ${tmpday}
+            Sleep    1s
+            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
         
     END
             
@@ -171,7 +159,8 @@ COMMON REPORT
         Input Text    //input[@id="ReportDisease_19CVS_S_QS19CVS344_AS19CVS344"]    ${element}[PCR_TEST_COMPANY]
         ${tmpday}    Get Taiwain Date String    ${element}[PCR_REPORT_DATE]
         Input Text    //*[@id="ReportDisease_19CVS_S_QS19CVS345_AS19CVS345"]    ${tmpday}
-        Sleep    2s        
+        Sleep    1s
+        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]           
     END
     
 
@@ -239,6 +228,8 @@ COMMON REPORT
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00023"]
             ${tmpday}    Get Taiwain Date String    ${element}[FIRST_INTUBATION]
             Input Text    //*[@id="ReportDisease_19CVS_S_19CVS_00025"]    ${tmpday}
+            Sleep    1s
+            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
         ELSE
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00024"]
         END
@@ -249,6 +240,8 @@ COMMON REPORT
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00027"]
             ${tmpday}    Get Taiwain Date String    ${element}[FIRST_ECMO]
             Input Text    //*[@id="ReportDisease_19CVS_S_19CVS_00029"]    ${tmpday}
+            Sleep    1s
+            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
         ELSE
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00028"]
         END

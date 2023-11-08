@@ -83,26 +83,13 @@ COMMON REPORT
     Disease Category    ${element}
 
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
 
 
     # 有無症狀
@@ -174,14 +161,18 @@ COMMON REPORT
                 IF    '${element}[ANIMAL_CONTACT_DATE]' != 'None'                    
                     Click Element    id=ReportDisease_100_S_Q010000022_AS01000002
                     ${tmpday}    Get Taiwain Date String    ${element}[ANIMAL_CONTACT_DATE]
-                    Input Text    //*[@id="ReportDisease_100_S_Q010000022_AS01000002"]    ${tmpday}                    
+                    Input Text    //*[@id="ReportDisease_100_S_Q010000022_AS01000002"]    ${tmpday}
+                    Sleep    1s
+                    Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]                       
                 END                                
             END
             IF    '${history}' == '野外活動'
                 IF    '${element}[ACTIVITY_DATE]' != 'None'
                     Click Element    id=ReportDisease_100_S_Q010000024_AS01000004
                     ${tmpday}    Get Taiwain Date String    ${element}[ACTIVITY_DATE]
-                    Input Text    //*[@id="ReportDisease_100_S_Q010000024_AS01000004"]    ${tmpday}                    
+                    Input Text    //*[@id="ReportDisease_100_S_Q010000024_AS01000004"]    ${tmpday}
+                    Sleep    1s
+                    Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]                       
                 END
                                
             END
@@ -189,7 +180,9 @@ COMMON REPORT
                 IF    '${element}[POLLUTE_ENV_DATE]' != 'None'
                     Click Element    id=ReportDisease_100_S_Q010000026_AS01000006
                     ${tmpday}    Get Taiwain Date String    ${element}[POLLUTE_ENV_DATE]
-                    Input Text    //*[@id="ReportDisease_100_S_Q010000026_AS01000006"]    ${tmpday}                    
+                    Input Text    //*[@id="ReportDisease_100_S_Q010000026_AS01000006"]    ${tmpday}
+                    Sleep    1s
+                    Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]                       
                 END               
             END
             Sleep    3s

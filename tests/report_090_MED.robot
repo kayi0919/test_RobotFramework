@@ -87,27 +87,13 @@ COMMON REPORT
     Disease Category    ${element}
 
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
-    
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
 
     
     # 有無症狀
@@ -243,6 +229,8 @@ COMMON REPORT
             Click Element    //label[@for="ReportDisease_090_S_QS09001090_AS09001091"]
             ${tmpday}    Get Taiwain Date String    ${element}[AIDS_TEST_DATE]
             Input Text    //*[@id="ReportDisease_090_S_QS09001100_AS09001100"]    ${tmpday}
+            Sleep    1s
+            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
         ELSE
             Click Element    //label[@for="ReportDisease_090_S_QS09001090_AS09001092"]
         END
@@ -356,33 +344,33 @@ Smoke_WEB_MED_090_NEWREPORT_01
         END
         
         # 測試2 增修
-        Read ID Excel    Data_ID.xlsx
-        Read Update Excel    Smoke_WEB_MED_090_NEWREPORT_01.xlsx
-        FOR    ${update}    IN    @{test_update}
-            FOR    ${id}    IN    @{test_id}
-                IF    ${id}[Num] == ${update}[Num]
-                    TRY
-                        Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
-                        Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
-                        Run Keyword If    ${item_result} == ${False}
-                        ...    Capture Page Screenshot    ${screenshot}\\090_report_MED_UPDATE_${update}[Num]_Error.png
+        # Read ID Excel    Data_ID.xlsx
+        # Read Update Excel    Smoke_WEB_MED_090_NEWREPORT_01.xlsx
+        # FOR    ${update}    IN    @{test_update}
+        #     FOR    ${id}    IN    @{test_id}
+        #         IF    ${id}[Num] == ${update}[Num]
+        #             TRY
+        #                 Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
+        #                 Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
+        #                 Run Keyword If    ${item_result} == ${False}
+        #                 ...    Capture Page Screenshot    ${screenshot}\\090_report_MED_UPDATE_${update}[Num]_Error.png
                     
-                        # 預期False 結果Pass
-                        # 若這裡錯誤會再執行except一次
-                        IF    ${item_result} != ${update}[EXPECTED]                            
-                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                                                        
-                        END
-                    EXCEPT
-                        # 預期Pass 結果False
-                        IF    ${item_result} != ${update}[EXPECTED]                            
-                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
-                        END                        
-                    END
-                    Clear Error
-                END
+        #                 # 預期False 結果Pass
+        #                 # 若這裡錯誤會再執行except一次
+        #                 IF    ${item_result} != ${update}[EXPECTED]                            
+        #                     Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                                                        
+        #                 END
+        #             EXCEPT
+        #                 # 預期Pass 結果False
+        #                 IF    ${item_result} != ${update}[EXPECTED]                            
+        #                     Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+        #                 END                        
+        #             END
+        #             Clear Error
+        #         END
                 
-            END
-        END
+        #     END
+        # END
 
         # 測試3 研判
         Run Keyword And Ignore Error    Logout

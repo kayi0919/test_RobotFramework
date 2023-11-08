@@ -84,26 +84,13 @@ COMMON REPORT
     Disease Category    ${element}
 
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
 
 
     # 有無症狀

@@ -85,26 +85,13 @@ COMMON REPORT
     Disease Category    ${element}
 
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
 
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
@@ -267,6 +254,8 @@ COMMON REPORT
     IF    '${element}[DUE_DATE]' != 'None'        
         ${tmpday}    Get Taiwain Date String    ${element}[DUE_DATE]
         Input Text    //*[@id="ReportDisease_044_S_044_00059"]    ${tmpday}
+        Sleep    1s
+        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
     END
     
     #增修原因
@@ -393,7 +382,7 @@ Smoke_WEB_MED_044_NEWREPORT_01
 
         # 測試3 研判
         Run Keyword And Ignore Error    Logout
-        Sleep    3s
+        
     END
     
 

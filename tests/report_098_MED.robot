@@ -9,6 +9,7 @@ Library    Telnet
 Resource   ..\\keywords\\keywords.robot
 Resource   ..\\keywords\\Variables.robot
 
+
 *** Variables ***
 ${screenshot}
 ${test_users}
@@ -81,26 +82,13 @@ COMMON REPORT
     Disease Category    ${element}
     
     # 發病日/無發病日區塊
-    IF    '${element}[NO_SICKDAY]' != 'None'
-        IF    ${element}[NO_SICKDAY] == $True
-            Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
-        ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-        END        
-    END
+    Sick Date    ${element}
 
     # 診斷日期
-    IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}        
-    END
+    Diagnose Day    ${element}
     
     # 報告日期
-    IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}        
-    END
+    Report Day    ${element}
 
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
@@ -175,6 +163,8 @@ COMMON REPORT
             IF    '${element}[AIDS_TEST_DATE]' != 'None'
                 ${tmpday}    Get Taiwain Date String    ${element}[AIDS_TEST_DATE]
                 Input Text    //*[@id="ReportDisease_098_S_Q000980020_AS09800020"]    ${tmpday}
+                Sleep    1s
+                Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
             END
         ELSE
             Click Element    //label[@for="ReportDisease_098_S_Q000980010_AS09800016"]
@@ -305,6 +295,4 @@ Smoke_WEB_MED_098_NEWREPORT_01
         Run Keyword And Ignore Error    Logout
     END
 
-
     [Teardown]    Close All Browsers
-
