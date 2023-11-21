@@ -29,38 +29,38 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
-    Sleep    1s
+    
     IF    ${element}[FUNCTION] == 1
         Log To Console    點擊新增通報單
         Click Element    id=101        
-    END    
-    Sleep    1s
+    END
+    Wait Until Page Contains Element    id=casePatient_Idno   
     # 診斷醫師
     Diagnostician    ${element}
     # 身分證統一編號
     IDNO    ${element}
     # 個案姓名
     Name    ${element}
-    # 羅馬拼音    
+    #羅馬拼音    
     Romanization    ${element}
-    # 性別
-    Gender    ${element}
-    # 出生日期
+    #性別
+    Gender    ${element} 
+    #生日
     Birthday    ${element}
-    # 本國籍
+    #本國籍
     Nationality    ${element}
-    
+
     #手機/聯絡電話欄位因為有重複定義的element id, 改以xpath處理
     #Input Text    id=casePatient_MobilePhone_0    ${element}[CELLPHONE]
     CellPhone    ${element}
     ContactPhone    ${element}
-    #居住縣市
+
     County    ${element}    
     # 出現list無內容的異常
     # 這邊click是為了觸發list重新更新
-    # 鄉鎮市區
     Town    ${element}
-    #居住村里
+    
+    #居住村里    
     Village    ${element}
     #街道地址
     Address    ${element}
@@ -70,9 +70,8 @@ COMMON REPORT
     Ins_Catrgory    ${element}
     #婚姻狀況
     Marriage    ${element}
-    #病患動向    
-    CasePatient    ${element}      
-    Sleep    2s
+    #病患動向   
+    CasePatient    ${element}
     # 是否死亡
     # 要先focus在此區域,選是否才沒有出現異常
     Death    ${element}
@@ -80,13 +79,10 @@ COMMON REPORT
     # 選擇疾病
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
     Disease Category    ${element}
-    
     # 發病日/無發病日區塊
     Sick Date    ${element}
-
     # 診斷日期
     Diagnose Day    ${element}
-    
     # 報告日期
     Report Day    ${element}
 
@@ -109,16 +105,14 @@ COMMON REPORT
                         Input Text    id=ReportDisease_symptom_otherSymp    ${element}[OTHER_SYMPTOM]
                     END
                 END
-            END
-            
+            END            
         ELSE
             Click Element    //*[@id="ReportDisease_symp"]/div[2]/label
         END
         
         IF    ${element}[FUNCTION] == 1
             # 臨床診斷感染淋病
-            Click Element    //label[@for="ReportDisease_098_S_Q000980001_AS09800001"]
-            Sleep    1s  
+            Click Element    //label[@for="ReportDisease_098_S_Q000980001_AS09800001"]  
         END
               
     END
@@ -150,7 +144,6 @@ COMMON REPORT
         Input Text    id=ReportDisease_mainProfdetail    ${element}[OCCUPATION_DESCRIPTION]
     END
 
-
     # 旅遊史
     # 旅遊史無法複選 國外旅遊及居住的國家id會持續變動
     Travel_History    ${element}
@@ -161,10 +154,7 @@ COMMON REPORT
         IF    ${element}[AIDS_TEST] == $True
             Click Element    //label[@for="ReportDisease_098_S_Q000980010_AS09800017"]
             IF    '${element}[AIDS_TEST_DATE]' != 'None'
-                ${tmpday}    Get Taiwain Date String    ${element}[AIDS_TEST_DATE]
-                Input Text    //*[@id="ReportDisease_098_S_Q000980020_AS09800020"]    ${tmpday}
-                Sleep    1s
-                Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
+                Transfer Taiwan Date    ${element}[AIDS_TEST_DATE]    //*[@id="ReportDisease_098_S_Q000980020_AS09800020"]  
             END
         ELSE
             Click Element    //label[@for="ReportDisease_098_S_Q000980010_AS09800016"]
@@ -206,19 +196,16 @@ Update Report
     
     Click Element    id=quick_search_field
     Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
-    
     Click Element    //*[@id="headersearch"]/div
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
-    Sleep    1s
     #資料增修
     COMMON REPORT    ${element}
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Sleep    1s
+
     Capture Page Screenshot    ${screenshot}\\098_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
 

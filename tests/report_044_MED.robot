@@ -27,55 +27,49 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
-    Sleep    1s
+
     IF    ${element}[FUNCTION] == 1
         Log To Console    點擊新增通報單
         Click Element    id=101        
-    END   
-    Sleep    1s
+    END
+    Wait Until Page Contains Element    id=casePatient_Idno   
+    # 診斷醫師
     Diagnostician    ${element}
+    # 身分證統一編號
     IDNO    ${element}
+    # 個案姓名
     Name    ${element}
-
     #羅馬拼音    
     Romanization    ${element}
-
     #性別
     Gender    ${element} 
-    
+    #生日
     Birthday    ${element}
     #本國籍
     Nationality    ${element}
-    
-    
+
     #手機/聯絡電話欄位因為有重複定義的element id, 改以xpath處理
     #Input Text    id=casePatient_MobilePhone_0    ${element}[CELLPHONE]
     CellPhone    ${element}
     ContactPhone    ${element}
+
     County    ${element}    
     # 出現list無內容的異常
     # 這邊click是為了觸發list重新更新
     Town    ${element}
-
-    #居住村里
+    
+    #居住村里    
     Village    ${element}
-
     #街道地址
     Address    ${element}
-
     #人口密集機構
     Institutions    ${element}
-
     #機構類別
     Ins_Catrgory    ${element}
-
     #婚姻狀況
     Marriage    ${element}
-
-    #病患動向    
-    CasePatient    ${element}      
-    Sleep    2s
-
+    #病患動向   
+    CasePatient    ${element}
     # 是否死亡
     # 要先focus在此區域,選是否才沒有出現異常
     Death    ${element}
@@ -83,13 +77,10 @@ COMMON REPORT
     # 選擇疾病
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
     Disease Category    ${element}
-
     # 發病日/無發病日區塊
     Sick Date    ${element}
-
     # 診斷日期
     Diagnose Day    ${element}
-    
     # 報告日期
     Report Day    ${element}
 
@@ -99,14 +90,13 @@ COMMON REPORT
     IF    '${element}[HAS_SYMPTOM]' != 'None'
         IF    ${element}[HAS_SYMPTOM] == $True
             Click Element    //*[@id="ReportDisease_symp"]/div[1]/label
-            Sleep    200ms       
+            Sleep    200ms
             IF    '${element}[OTHER_SYMPTOM]' != 'None'
                 Input Text    //*[@id="ReportDisease_symptom_otherSymp"]    ${element}[OTHER_SYMPTOM]
             END        
         ELSE
         Click Element    //*[@id="ReportDisease_symp"]/div[2]/label
         END
-        Sleep    1s
     END
     
 
@@ -122,16 +112,14 @@ COMMON REPORT
                         IF    ${anti} == 1
                             Click Element    //label[@for="ReportDisease_044_S_044_00002"]
                             IF    '${element}[COMPOSITE_REPORT]' != 'None'
-                                ${tmpday}    Get Taiwain Date String    ${element}[COMPOSITE_REPORT]
-                                Input Text    //*[@id="ReportDisease_044_S_044_00003"]    ${tmpday}
+                                Transfer Taiwan Date    ${element}[COMPOSITE_REPORT]    //*[@id="ReportDisease_044_S_044_00003"]
                                 Click Element    id=ReportDisease_044_S_044_00004_name                                
                                 Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                             END
                         ELSE
                             Click Element    //label[@for="ReportDisease_044_S_044_00005"]
                             IF    '${element}[ANTIBODY_REPORT]' != 'None'
-                                ${tmpday}    Get Taiwain Date String    ${element}[ANTIBODY_REPORT]
-                                Input Text    //*[@id="ReportDisease_044_S_044_00006"]    ${tmpday}
+                                Transfer Taiwan Date    ${element}[ANTIBODY_REPORT]    //*[@id="ReportDisease_044_S_044_00006"]
                                 Click Element    id=ReportDisease_044_S_044_00007_name                                
                                 Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                             END
@@ -148,8 +136,7 @@ COMMON REPORT
                         Click Element    //label[@for="ReportDisease_044_S_044_00010"]
                     END
                     IF    '${element}[HIV_TEST_DATE]' != 'None'
-                        ${tmpday}    Get Taiwain Date String    ${element}[HIV_TEST_DATE]
-                        Input Text    //*[@id="ReportDisease_044_S_044_00011"]    ${tmpday}
+                        Transfer Taiwan Date    ${element}[HIV_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00011"]
                         Click Element    id=ReportDisease_044_S_044_00012_name                        
                         Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                     END                    
@@ -158,8 +145,7 @@ COMMON REPORT
             IF    ${hiv} == 3
                 Click Element    //label[@for="ReportDisease_044_S_044_00013"]
                 IF    '${element}[ACID_TEST_DATE]' != 'None'
-                    ${tmpday}    Get Taiwain Date String    ${element}[ACID_TEST_DATE]
-                    Input Text    //*[@id="ReportDisease_044_S_044_00014"]    ${tmpday}
+                    Transfer Taiwan Date    ${element}[ACID_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00014"]
                     Click Element    id=ReportDisease_044_S_044_00015_name                    
                     Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                 END
@@ -167,14 +153,12 @@ COMMON REPORT
             IF    ${hiv} == 4
                 Click Element    //label[@for="ReportDisease_044_S_044_00016"]
                 IF    '${element}[P24_TEST_DATE]' != 'None'
-                    ${tmpday}    Get Taiwain Date String    ${element}[P24_TEST_DATE]
-                    Input Text    //*[@id="ReportDisease_044_S_044_00017"]    ${tmpday}
+                    Transfer Taiwan Date    ${element}[P24_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00017"]
                     Click Element    id=ReportDisease_044_S_044_00018_name                    
                     Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                 END
                 IF    '${element}[NEUTRAL_TEST_DATE]' != 'None'
-                    ${tmpday}    Get Taiwain Date String    ${element}[NEUTRAL_TEST_DATE]
-                    Input Text    //*[@id="ReportDisease_044_S_044_00019"]    ${tmpday}
+                    Transfer Taiwan Date    ${element}[NEUTRAL_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00019"]
                     Click Element    id=ReportDisease_044_S_044_00020_name                    
                     Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                 END
@@ -188,9 +172,8 @@ COMMON REPORT
     IF    '${element}[ACUTE_INFECTION]' != 'None'
         IF    ${element}[ACUTE_INFECTION] == $True
             Click Element    //label[@for="ReportDisease_044_S_044_00021"]
-            IF    '${element}[PROJECT_INSPECTION]' != 'None'                
-                ${tmpday}    Get Taiwain Date String    ${element}[INSPECTION_DATE]
-                Input Text    //*[@id="ReportDisease_044_S_044_000${element}[PROJECT_DATA1]"]    ${tmpday}
+            IF    '${element}[PROJECT_INSPECTION]' != 'None'
+                Transfer Taiwan Date    ${element}[INSPECTION_DATE]    //*[@id="ReportDisease_044_S_044_000${element}[PROJECT_DATA1]"]
                 Click Element    id=ReportDisease_044_S_044_000${element}[PROJECT_DATA2]_name                    
                 Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE]
                 
@@ -230,6 +213,7 @@ COMMON REPORT
 
     # 感染危險因子
     IF    '${element}[INFECTION_RISK]' != 'None'
+        Scroll Element Into View    //*[@id="diseaseReportData"]/div[10]/div
         @{infection_risk}    Split String    ${element}[INFECTION_RISK]    ,
         FOR    ${risk}    IN    @{infection_risk}
             Click Element    //label[contains(text(), '${risk}')]
@@ -251,11 +235,8 @@ COMMON REPORT
     END
 
     #預產期
-    IF    '${element}[DUE_DATE]' != 'None'        
-        ${tmpday}    Get Taiwain Date String    ${element}[DUE_DATE]
-        Input Text    //*[@id="ReportDisease_044_S_044_00059"]    ${tmpday}
-        Sleep    1s
-        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
+    IF    '${element}[DUE_DATE]' != 'None'
+        Transfer Taiwan Date    ${element}[DUE_DATE]    //*[@id="ReportDisease_044_S_044_00059"]  
     END
     
     #增修原因
@@ -296,13 +277,11 @@ Update Report
     Wait Until Page Contains    ${element_id}[REPORT_ID]
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
-    Sleep    2s
     #資料增修
     COMMON REPORT    ${element}
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Sleep    1s
     Capture Page Screenshot    ${screenshot}\\044_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
 

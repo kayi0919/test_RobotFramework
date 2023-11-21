@@ -27,57 +27,49 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
-    Sleep    1s
+    
     IF    ${element}[FUNCTION] == 1
         Log To Console    點擊新增通報單
         Click Element    id=101        
-    END  
-    Sleep    1s
+    END
+    Wait Until Page Contains Element    id=casePatient_Idno   
+    # 診斷醫師
     Diagnostician    ${element}
+    # 身分證統一編號
     IDNO    ${element}
+    # 個案姓名
     Name    ${element}
-
-    #羅馬拼音
+    #羅馬拼音    
     Romanization    ${element}
-
     #性別
-    Gender    ${element}
-    
+    Gender    ${element} 
+    #生日
     Birthday    ${element}
-
     #本國籍
     Nationality    ${element}
-    
-    
+
     #手機/聯絡電話欄位因為有重複定義的element id, 改以xpath處理
     #Input Text    id=casePatient_MobilePhone_0    ${element}[CELLPHONE]
     CellPhone    ${element}
     ContactPhone    ${element}
+
     County    ${element}    
     # 出現list無內容的異常
     # 這邊click是為了觸發list重新更新
     Town    ${element}
-    #居住村里
+    
+    #居住村里    
     Village    ${element}
-
     #街道地址
     Address    ${element}
-
     #人口密集機構
     Institutions    ${element}
-
     #機構類別
     Ins_Catrgory    ${element}
-
     #婚姻狀況
     Marriage    ${element}
-
-
-    #病患動向    
-    CasePatient    ${element}      
-    Sleep    2s
-    
-
+    #病患動向   
+    CasePatient    ${element}
     # 是否死亡
     # 要先focus在此區域,選是否才沒有出現異常
     Death    ${element}
@@ -85,16 +77,12 @@ COMMON REPORT
     # 選擇疾病
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
     Disease Category    ${element}
-
     # 發病日/無發病日區塊
     Sick Date    ${element}
-
     # 診斷日期
     Diagnose Day    ${element}
-    
     # 報告日期
     Report Day    ${element}
-
     
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
@@ -115,12 +103,10 @@ COMMON REPORT
                         Input Text    id=ReportDisease_symptom_otherSymp    ${element}[OTHER_SYMPTOM]
                     END
                 END                
-            END
-            
+            END            
         ELSE
             Click Element    //*[@id="ReportDisease_symp"]/div[2]/label
-        END
-        Sleep    1s        
+        END        
     END
         
 
@@ -214,33 +200,23 @@ COMMON REPORT
         Input Text    id=ReportDisease_mainProfdetail    ${element}[OCCUPATION_DESCRIPTION]
     END
 
-
     # 旅遊史
     # 旅遊史無法複選 國外旅遊及居住的國家id會持續變動
     Travel_History    ${element}
-    
-    
 
     #個案狀況維護與補充資料
     #愛滋篩檢
-    IF    '${element}[AIDS_TEST]' != 'None'
-    
+    IF    '${element}[AIDS_TEST]' != 'None'    
         IF    ${element}[AIDS_TEST] == $True
             Click Element    //label[@for="ReportDisease_090_S_QS09001090_AS09001091"]
-            ${tmpday}    Get Taiwain Date String    ${element}[AIDS_TEST_DATE]
-            Input Text    //*[@id="ReportDisease_090_S_QS09001100_AS09001100"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
+            Transfer Taiwan Date    ${element}[AIDS_TEST_DATE]    //*[@id="ReportDisease_090_S_QS09001100_AS09001100"]  
         ELSE
             Click Element    //label[@for="ReportDisease_090_S_QS09001090_AS09001092"]
         END
     END
     
-    
-
     #懷孕
-    IF    '${element}[PREGNANT]' != 'None'
-    
+    IF    '${element}[PREGNANT]' != 'None'    
         IF    ${element}[PREGNANT] == $True
             Click Element    //label[@for="ReportDisease_090_S_QS09001110_AS09001111"]    
             Input Text    //*[@id="ReportDisease_090_S_QS09001120_AS09001120"]    ${element}[PREGNANT_WEEK]
@@ -249,12 +225,10 @@ COMMON REPORT
         END
     END
     
-    
     #增修原因
     IF    '${element}[UPDATE_REASON]' != 'None'
         Input Text    //textarea[@id="casePatient_ModifyReason"]    ${element}[UPDATE_REASON]
     END
-
 
     # 新增通報
     Set Global Variable    ${item_function}    ${element}[FUNCTION]
@@ -290,13 +264,11 @@ Update Report
     Wait Until Page Contains    ${element_id}[REPORT_ID]
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
-    Sleep    2s
     #資料增修
     COMMON REPORT    ${element}
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Sleep    1s
     Capture Page Screenshot    ${screenshot}\\090_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
 
@@ -344,33 +316,33 @@ Smoke_WEB_MED_090_NEWREPORT_01
         END
         
         # 測試2 增修
-        # Read ID Excel    Data_ID.xlsx
-        # Read Update Excel    Smoke_WEB_MED_090_NEWREPORT_01.xlsx
-        # FOR    ${update}    IN    @{test_update}
-        #     FOR    ${id}    IN    @{test_id}
-        #         IF    ${id}[Num] == ${update}[Num]
-        #             TRY
-        #                 Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
-        #                 Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
-        #                 Run Keyword If    ${item_result} == ${False}
-        #                 ...    Capture Page Screenshot    ${screenshot}\\090_report_MED_UPDATE_${update}[Num]_Error.png
+        Read ID Excel    Data_ID.xlsx
+        Read Update Excel    Smoke_WEB_MED_090_NEWREPORT_01.xlsx
+        FOR    ${update}    IN    @{test_update}
+            FOR    ${id}    IN    @{test_id}
+                IF    ${id}[Num] == ${update}[Num]
+                    TRY
+                        Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
+                        Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
+                        Run Keyword If    ${item_result} == ${False}
+                        ...    Capture Page Screenshot    ${screenshot}\\090_report_MED_UPDATE_${update}[Num]_Error.png
                     
-        #                 # 預期False 結果Pass
-        #                 # 若這裡錯誤會再執行except一次
-        #                 IF    ${item_result} != ${update}[EXPECTED]                            
-        #                     Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                                                        
-        #                 END
-        #             EXCEPT
-        #                 # 預期Pass 結果False
-        #                 IF    ${item_result} != ${update}[EXPECTED]                            
-        #                     Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
-        #                 END                        
-        #             END
-        #             Clear Error
-        #         END
+                        # 預期False 結果Pass
+                        # 若這裡錯誤會再執行except一次
+                        IF    ${item_result} != ${update}[EXPECTED]                            
+                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                                                        
+                        END
+                    EXCEPT
+                        # 預期Pass 結果False
+                        IF    ${item_result} != ${update}[EXPECTED]                            
+                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                        END                        
+                    END
+                    Clear Error
+                END
                 
-        #     END
-        # END
+            END
+        END
 
         # 測試3 研判
         Run Keyword And Ignore Error    Logout

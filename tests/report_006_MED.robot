@@ -25,12 +25,11 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
-    Sleep    1s
     IF    ${element}[FUNCTION] == 1
         Log To Console    點擊新增通報單
         Click Element    id=101        
-    END   
-    Sleep    1s
+    END
+    Wait Until Page Contains Element    id=casePatient_Idno
     # 診斷醫師
     Diagnostician    ${element}
     # 身分證統一編號
@@ -50,31 +49,23 @@ COMMON REPORT
     #Input Text    id=casePatient_MobilePhone_0    ${element}[CELLPHONE]
     CellPhone    ${element}
     ContactPhone    ${element}
+
     County    ${element}    
     # 出現list無內容的異常
     # 這邊click是為了觸發list重新更新
     Town    ${element}
-    
     #居住村里
     Village    ${element}
-
     #街道地址
     Address    ${element}
-
     #人口密集機構
     Institutions    ${element}
-
     #機構類別
     Ins_Catrgory    ${element}
-
     #婚姻狀況
     Marriage    ${element}
-
     #病患動向    
-    CasePatient    ${element}      
-    Sleep    2s
-    
-
+    CasePatient    ${element}    
     # 是否死亡
     # 要先focus在此區域,選是否才沒有出現異常
     Death    ${element}
@@ -82,16 +73,12 @@ COMMON REPORT
     # 選擇疾病
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
     Disease Category    ${element}
-
     # 發病日/無發病日區塊
     Sick Date    ${element}
-
     # 診斷日期
     Diagnose Day    ${element}
-    
     # 報告日期
     Report Day    ${element}
-
 
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
@@ -116,9 +103,7 @@ COMMON REPORT
             
         ELSE
             Click Element    //*[@id="ReportDisease_symp"]/div[2]/label
-        END
-        
-        Sleep    1s        
+        END        
     END
 
     # 檢驗資料
@@ -138,22 +123,19 @@ COMMON REPORT
                 Click Element    //label[@for="ReportDisease_006_S_Q000060004_AS00000019"]
                 IF    '${element}[FIRST_ANTIBODY_TITER]' != 'None'
                     Input Text    //*[@id="ReportDisease_006_S_Q000060016_A000000117"]    ${element}[FIRST_ANTIBODY_TITER]
-                    ${tmpday}    Get Taiwain Date String    ${element}[FIRST_TEST_DATE]
-                    Input Text    //*[@id="ReportDisease_006_S_Q000060016_A000000118"]    ${tmpday}
+                    Transfer Taiwan Date    ${element}[FIRST_TEST_DATE]    //*[@id="ReportDisease_006_S_Q000060016_A000000118"]
                     Input Text    //*[@id="ReportDisease_006_S_Q000060016_A000000295"]    ${element}[FIRST_TEST_METHOD]
                 END
                 IF    '${element}[SECOND_ANTIBODY_TITER]' != 'None'
                     Input Text    //*[@id="ReportDisease_006_S_Q000060017_A000000117"]    ${element}[SECOND_ANTIBODY_TITER]
-                    ${tmpday}    Get Taiwain Date String    ${element}[SECOND_TEST_DATE]
-                    Input Text    //*[@id="ReportDisease_006_S_Q000060017_A000000118"]    ${tmpday}
+                    Transfer Taiwan Date    ${element}[SECOND_TEST_DATE]    //*[@id="ReportDisease_006_S_Q000060017_A000000118"]
                     Input Text    //*[@id="ReportDisease_006_S_Q000060017_A000000295"]    ${element}[SECOND_TEST_METHOD]
                 END
             END
             IF    ${data} == 4
                 Click Element    //label[@for="ReportDisease_006_S_Q000060005_AS00000020"]
                 IF    '${element}[ANTIBODY_TITER]' != 'None'
-                    Input Text    //*[@id="ReportDisease_006_S_Q000060020_A000000212"]    ${element}[ANTIBODY_TITER]
-                    
+                    Input Text    //*[@id="ReportDisease_006_S_Q000060020_A000000212"]    ${element}[ANTIBODY_TITER]                    
                     Input Text    //*[@id="ReportDisease_006_S_Q000060020_A000000295"]    ${element}[TEST_METHOD]
                 END
             END
@@ -165,8 +147,6 @@ COMMON REPORT
             END
         END        
     END
-
-    
     
     # 職業
     IF    '${element}[OCCUPATION]' != 'None'
@@ -177,7 +157,6 @@ COMMON REPORT
         Click Element    id=ReportDisease_mainProfdetail
         Input Text    id=ReportDisease_mainProfdetail    ${element}[OCCUPATION_DESCRIPTION]
     END
-
 
     # 旅遊史
     # 旅遊史無法複選 國外旅遊及居住的國家id會持續變動
@@ -196,7 +175,6 @@ COMMON REPORT
 
         # 注意, 以@類型接收
         @{contact_history}    Split String    ${element}[CONTACT_HISTORY]    ,
-        
         FOR    ${history}    IN    @{contact_history}
             Log To Console    ${history}
             Click Element    //label[contains(text(), '${history}')]            
@@ -241,13 +219,11 @@ Update Report
     Wait Until Page Contains    ${element_id}[REPORT_ID]
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
-    Sleep    2s
     #資料增修
     COMMON REPORT    ${element}
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Sleep    1s
     Capture Page Screenshot    ${screenshot}\\006_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
 
@@ -257,7 +233,7 @@ Smoke_WEB_MED_006_NEWREPORT_01
     [Documentation]    煙霧測試:醫療院所阿米巴性痢疾通報
     [Tags]    Smoke
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
-
+    
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Clean Excel    Data_ID.xlsx
     Clean Excel    Data_Result.xlsx
@@ -267,7 +243,6 @@ Smoke_WEB_MED_006_NEWREPORT_01
     Create Directory    ${screenshot}    resource=false
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
-
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}
 

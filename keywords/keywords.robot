@@ -117,6 +117,13 @@ Write Result Excel
     Save Workbook
     Close Workbook
 
+Transfer Taiwan Date
+    [Arguments]    ${element_data}    ${locator}
+    ${tmpday}    Get Taiwain Date String    ${element_data}
+    Input Text    ${locator}    ${tmpday}
+    Wait Until Page Contains Element    //div[@id="ui-datepicker-div"]/div[2]/button[2]
+    Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
+
 Diagnostician
     [Arguments]    ${element}
     IF    '${element}[IDNO]' != 'None'
@@ -161,7 +168,7 @@ Birthday
     IF    '${element}[BIRTHDAY]' != 'None'
         Log To Console    ${element}[BIRTHDAY]
         Input Text    id=casePatient_Birthdate    ${element}[BIRTHDAY]
-        Sleep    1s
+        Wait Until Page Contains Element    //div[@id="ui-datepicker-div"]/div[2]/button[2]
         Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
     END
 
@@ -169,32 +176,32 @@ Birthday
 Nationality
     [Arguments]    ${element}
     IF    '${element}[NATIONALITY]' != 'None'
-        IF    ${element}[NATIONALITY] == $True    #非必填 預設非本國籍
+        IF    ${element}[NATIONALITY] == $True    #預設非本國籍
             Click Element    //label[@for="casePatient_Nation_Local"]        
         ELSE
             Click Element    //label[@for="casePatient_Nation_Foreigner"]
-            Sleep    1s
             Click Element    id=_easyui_textbox_input3
-            Sleep    1s
+            Sleep    200ms
             Input Text    id=_easyui_textbox_input3    ${element}[COUNTRY]
-            Sleep    2s
-
+            Sleep    500ms
             #選項有OTH 其他時須填寫            
             IF    '${element}[COUNTRY]' == 'OTH 其他'
                 Click Element    id=casePatient_other_Country
-                Sleep    1s
-                Input Text    id=casePatient_other_Country    ${element}[OTHER_COUNTRY]            
-                Sleep    2s
+                Sleep    200ms
+                Input Text    id=casePatient_other_Country    ${element}[OTHER_COUNTRY]
             END
+            Identity    ${element}
+        END
+    END
 
-            Select From List By Label    id=casePatient_Foreigner_Type    ${element}[IDENTITY]
-            Sleep    2s
-            #選項有其他時須填寫
-            IF    '${element}[IDENTITY]' == '其他'
-                Click Element    id=casePatient_Foreigner_Description
-                Input Text    id=casePatient_Foreigner_Description    ${element}[IDENTITY_DESCRIPTION]            
-                Sleep    2s
-            END
+Identity
+    [Arguments]    ${element}
+    IF    '${element}[IDENTITY]' != 'None'
+        Select From List By Label    id=casePatient_Foreigner_Type    ${element}[IDENTITY] 
+        IF    '${element}[IDENTITY]' == '其他'
+            Click Element    id=casePatient_Foreigner_Description
+            Sleep    200ms
+            Input Text    id=casePatient_Foreigner_Description    ${element}[IDENTITY_DESCRIPTION]
         END
     END
 
@@ -247,10 +254,9 @@ Institutions
         IF    ${element}[INSTITUTIONS] == $True    
             Click Element    //label[@for="casePatient_DenseFacility_True"]        
         ELSE        
-            Click Element    //label[@for="casePatient_DenseFacility_False"]U                    
+            Click Element    //label[@for="casePatient_DenseFacility_False"]
         END
     END
-
 
 Ins_Catrgory
     [Arguments]    ${element}
@@ -260,7 +266,6 @@ Ins_Catrgory
         Select From List By Label    id=casePatient_FacilityType    ${element}[INSTITUTIONS_CATEGORY]
     END
 
-
 Marriage
     [Arguments]    ${element}
     IF    '${element}[MARRIAGE]' != 'None'
@@ -268,7 +273,6 @@ Marriage
         Wait Until Element Contains    id=casePatient_Marriage    ${element}[MARRIAGE]
         Select From List By Label    id=casePatient_Marriage    ${element}[MARRIAGE]
     END
-
 
 
 CasePatient
@@ -282,31 +286,19 @@ CasePatient
         END        
         IF    '${element}[CASEPATIENT]' == '3'
             Click Element    //label[@for="casePatient_StatusWhenReport_C"]
-            ${tmpday}    Get Taiwain Date String    ${element}[FIRST_GENERAL_WARD]
-            Input Text    //*[@id="casePatient_AdmissionDate"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
+            Transfer Taiwan Date    ${element}[FIRST_GENERAL_WARD]    //*[@id="casePatient_AdmissionDate"]
         END
         IF    '${element}[CASEPATIENT]' == '4'
             Click Element    //label[@for="casePatient_StatusWhenReport_D"]
-            ${tmpday}    Get Taiwain Date String    ${element}[FIRST_ICU]
-            Input Text    //*[@id="casePatient_FirstICUWardDate"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]            
+            Transfer Taiwan Date    ${element}[FIRST_ICU]    //*[@id="casePatient_FirstICUWardDate"]           
         END
         IF    '${element}[CASEPATIENT]' == '5'
             Click Element    //label[@for="casePatient_StatusWhenReport_E"]
-            ${tmpday}    Get Taiwain Date String    ${element}[FIRST_ISOLATION_WARD]
-            Input Text    //*[@id="casePatient_FirstIsolateWardDate"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]            
+            Transfer Taiwan Date    ${element}[FIRST_ISOLATION_WARD]    //*[@id="casePatient_FirstIsolateWardDate"]           
         END
         IF    '${element}[CASEPATIENT]' == '6'
             Click Element    //label[@for="casePatient_StatusWhenReport_F"]
-            ${tmpday}    Get Taiwain Date String    ${element}[DISCHARGE_DATE]
-            Input Text    //*[@id="casePatient_DischargedDate"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]            
+            Transfer Taiwan Date    ${element}[DISCHARGE_DATE]    //*[@id="casePatient_DischargedDate"]          
         END
         IF    '${element}[CASEPATIENT]' == '7'
             Click Element    //label[@for="casePatient_StatusWhenReport_G"]
@@ -317,10 +309,9 @@ CasePatient
                 Search Type    ${element}[SEARCH_TYPE]    ${element}[KEYWORD_SEARCH]    ${element}[APARTMENT_CITY]    ${element}[APARTMENT_TYPE]    
             END
             IF    '${element}[TRANSFER_INSTITUTE_DATE]' != 'None'
-                ${tmpday}    Get Taiwain Date String    ${element}[TRANSFER_INSTITUTE_DATE]
-                Input Text    //*[@id="casePatient_ReferHospDate"]   ${tmpday}
-                Sleep    1s
-                Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]                
+                Wait Until Page Contains Element    //*[@id="casePatient_ReferHospDate"]
+                Click Element    //*[@id="casePatient_ReferHospDate"]
+                Transfer Taiwan Date    ${element}[TRANSFER_INSTITUTE_DATE]    //*[@id="casePatient_ReferHospDate"]               
             END           
         END  
         IF    '${element}[CASEPATIENT]' == '8'
@@ -335,33 +326,28 @@ Search Type
     [Arguments]    ${search_type}    ${keyword_search}    ${apartment_city}    ${apartment_type}
     Wait Until Page Contains    關鍵字查詢
     IF    '${search_type}' == '1'
-                Sleep    2s
-                Click Element    //*[@id="hospSelectorData"]/div/div                 
-                Input Text    id=hospSelector_SearchText    ${keyword_search}                
-                Click Button    //*[@id="hospSelectorData"]/div[1]/div/button
-                Wait Until Page Contains Element    //div[@id="hospSelector_SearchResult"]/div/div[1]/a
-                #Sleep    1s
-                #暫抓搜尋到的第一筆資料            
-                Click Element    //div[@id="hospSelector_SearchResult"]/div/div[1]/a            
-            END
+        Sleep    200ms
+        Click Element    //*[@id="hospSelectorData"]/div/div                 
+        Input Text    id=hospSelector_SearchText    ${keyword_search}                
+        Click Button    //*[@id="hospSelectorData"]/div[1]/div/button
+        Wait Until Page Contains Element    //div[@id="hospSelector_SearchResult"]/div/div[1]/a
+        #暫抓搜尋到的第一筆資料            
+        Click Element    //div[@id="hospSelector_SearchResult"]/div/div[1]/a            
+    END
 
-            IF    '${search_type}' == '2'
-                Sleep    2s
-                Click Element    //*[@id="hospSelector_County"]
-                Wait Until Element Contains    id=hospSelector_County    ${apartment_city}
-                Select From List By Label    id=hospSelector_County    ${apartment_city}
-                Sleep    1s
-                Click Element    //*[@id="hospSelector_Type"]
-                Wait Until Element Contains    id=hospSelector_Type    ${apartment_type}
-                Select From List By Label    id=hospSelector_Type    ${apartment_type}
-                Wait Until Page Contains Element     //div[@id="hospSelector_SearchResult"]/div/div[1]/a
-                #Sleep    1s
-                #暫抓搜尋到的第一筆資料   
-                Click Element    //div[@id="hospSelector_SearchResult"]/div/div[1]/a                
-            END            
-            Sleep    2s
-
-
+    IF    '${search_type}' == '2'
+        Sleep    200ms
+        Click Element    //*[@id="hospSelector_County"]
+        Wait Until Element Contains    id=hospSelector_County    ${apartment_city}
+        Select From List By Label    id=hospSelector_County    ${apartment_city}
+        Sleep    200ms
+        Click Element    //*[@id="hospSelector_Type"]
+        Wait Until Element Contains    id=hospSelector_Type    ${apartment_type}
+        Select From List By Label    id=hospSelector_Type    ${apartment_type}
+        Wait Until Page Contains Element     //div[@id="hospSelector_SearchResult"]/div/div[1]/a
+        #暫抓搜尋到的第一筆資料   
+        Click Element    //div[@id="hospSelector_SearchResult"]/div/div[1]/a                
+    END
 
 Death
     [Arguments]    ${element}
@@ -371,11 +357,7 @@ Death
         Wait Until Page Contains    個案是否死亡
         IF    ${element}[DEATH] == $True
             Click Element    //label[@for="casePatient_isDead_True"]
-            ${tmpday}    Get Taiwain Date String    ${element}[DEATH_DAY]
-            Input Text    //*[@id="casePatient_DateOfDead"]   ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
-            
+            Transfer Taiwan Date    ${element}[DEATH_DAY]    //*[@id="casePatient_DateOfDead"]
             #只設定一個死亡原因
             IF    '${element}[DEATH_REASON]' != 'None'
                 Input Text    id=casePatient_DeadReason_A    ${element}[DEATH_REASON]            
@@ -411,10 +393,7 @@ Sick Date
         IF    ${element}[NO_SICKDAY] == $True
             Click Element    //*[@id="ReportRelateDate"]/div[2]/div[2]/div/label
         ELSE
-            ${tmpday}    Get Taiwain Date String    ${element}[SICK_DAY]
-            Input Text    //*[@id="ReportDisease_onsetDate"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
+            Transfer Taiwan Date    ${element}[SICK_DAY]    //*[@id="ReportDisease_onsetDate"]   
         END        
     END
 
@@ -422,19 +401,13 @@ Sick Date
 Diagnose Day
     [Arguments]    ${element}
     IF    '${element}[DIAGNOSE_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[DIAGNOSE_DAY]
-        Input Text    //*[@id="ReportDisease_diagDate"]    ${tmpday}
-        Sleep    1s
-        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]           
+        Transfer Taiwan Date    ${element}[DIAGNOSE_DAY]    //*[@id="ReportDisease_diagDate"]           
     END
 
 Report Day
     [Arguments]    ${element}
     IF    '${element}[REPORTED_DAY]' != 'None'
-        ${tmpday}    Get Taiwain Date String    ${element}[REPORTED_DAY]
-        Input Text    //*[@id="ReportDisease_reportDate"]    ${tmpday}
-        Sleep    1s
-        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]        
+        Transfer Taiwan Date    ${element}[REPORTED_DAY]    //*[@id="ReportDisease_reportDate"]        
     END
 
 Travel_History
@@ -442,52 +415,38 @@ Travel_History
     IF    '${element}[HAS_TRAVEL_HISTORY]' != 'None'
         IF    ${element}[HAS_TRAVEL_HISTORY] == $True
         Click Element    //*[@id="ReportDisease_mainTrav"]/div[1]/label
-        Sleep    2s
-        
+        Wait Until Page Contains    國內旅遊史
             IF    '${element}[MAIN_TRAVAL]' == '1'
                 #國內
                 Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[1]/div/label
+                Wait Until Page Contains Element    id=ReportDisease_inCountry_0_county
                 Click Element    id=ReportDisease_inCountry_0_county
                 Select From List By Label    id=ReportDisease_inCountry_0_county    ${element}[IN_COUNTRY_CITY]
-                ${tmpday}    Get Taiwain Date String    ${element}[IN_COUNTRY_START]
-                Input Text    //*[@id="ReportDisease_inCountry_0_start"]    ${tmpday}
-
-                ${tmpday}    Get Taiwain Date String    ${element}[IN_COUNTRY_END]
-                Input Text    //*[@id="ReportDisease_inCountry_0_end"]    ${tmpday}
-                Sleep    1s
-                Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
+                Transfer Taiwan Date    ${element}[IN_COUNTRY_START]    //*[@id="ReportDisease_inCountry_0_start"] 
+                Transfer Taiwan Date    ${element}[IN_COUNTRY_END]    //*[@id="ReportDisease_inCountry_0_end"]
             END
             IF    '${element}[MAIN_TRAVAL]' == '2'
                 #國外旅遊
                 Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[3]/div/label                
-                Sleep    2s
-                Click Element    //*[@id="_easyui_textbox_input6"]                            
-                Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY]            
-                Sleep    2s
-                ${tmpday}    Get Taiwain Date String    ${element}[OUT_COUNTRY_START]
-                Input Text    //*[@id="ReportDisease_outCountry_0_start"]    ${tmpday}
-
-                ${tmpday}    Get Taiwain Date String    ${element}[OUT_COUNTRY_END]
-                Input Text    //*[@id="ReportDisease_outCountry_0_end"]    ${tmpday}
-                Sleep    1s
-                Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
+                Wait Until Page Contains Element    //*[@id="_easyui_textbox_input6"]
+                Click Element    //*[@id="_easyui_textbox_input6"]
+                Sleep    200ms
+                Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY]
+                Sleep    500ms            
+                Transfer Taiwan Date    ${element}[OUT_COUNTRY_START]    //*[@id="ReportDisease_outCountry_0_start"] 
+                Transfer Taiwan Date    ${element}[OUT_COUNTRY_END]    //*[@id="ReportDisease_outCountry_0_end"]
             END
             IF    '${element}[MAIN_TRAVAL]' == '3'
                 #國外居住
                 Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[5]/div/label
-                Sleep    2s
+                Wait Until Page Contains Element    //*[@id="_easyui_textbox_input6"]
                 Click Element    //*[@id="_easyui_textbox_input6"]
+                Sleep    200ms
                 Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY_LIVE]
-                Sleep    2s
-                ${tmpday}    Get Taiwain Date String    ${element}[DEPARTURE_DATE]
-                Input Text    //*[@id="ReportDisease_outCountryLive_0_county_out"]    ${tmpday}
-
-                ${tmpday}    Get Taiwain Date String    ${element}[ENTRY_DATE]
-                Input Text    //*[@id="ReportDisease_outCountryLive_0_county_in"]    ${tmpday}
-                Sleep    1s
-                Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
-            END     
-        
+                Sleep    500ms
+                Transfer Taiwan Date    ${element}[DEPARTURE_DATE]    //*[@id="ReportDisease_outCountryLive_0_county_out"]
+                Transfer Taiwan Date    ${element}[ENTRY_DATE]    //*[@id="ReportDisease_outCountryLive_0_county_in"]  
+            END        
         ELSE
             Click Element    //*[@id="ReportDisease_mainTrav"]/div[2]/label
         END

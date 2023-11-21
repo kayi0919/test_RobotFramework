@@ -28,23 +28,23 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
-    Sleep    1s
     IF    ${element}[FUNCTION] == 1
         Log To Console    點擊新增通報單
         Click Element    id=101        
     END   
-    Sleep    1s
+    Wait Until Page Contains Element    id=casePatient_Idno
+    # 診斷醫師
     Diagnostician    ${element}
+    # 身分證統一編號
     IDNO    ${element}
+    # 個案姓名
     Name    ${element}
     #羅馬拼音    
-    Romanization    ${element}   
-
+    Romanization    ${element}
     #性別
-    Gender    ${element}   
-    
+    Gender    ${element} 
+    #生日
     Birthday    ${element}
-    
     #本國籍
     Nationality    ${element}
 
@@ -52,6 +52,7 @@ COMMON REPORT
     #Input Text    id=casePatient_MobilePhone_0    ${element}[CELLPHONE]
     CellPhone    ${element}
     ContactPhone    ${element}
+
     County    ${element}    
     # 出現list無內容的異常
     # 這邊click是為了觸發list重新更新
@@ -59,23 +60,16 @@ COMMON REPORT
     
     #居住村里    
     Village    ${element}
-    
     #街道地址
     Address    ${element}
-
     #人口密集機構
     Institutions    ${element}
-
     #機構類別
     Ins_Catrgory    ${element}
-
     #婚姻狀況
     Marriage    ${element}
-
     #病患動向   
-    CasePatient    ${element}      
-    Sleep    2s
-
+    CasePatient    ${element}
     # 是否死亡
     # 要先focus在此區域,選是否才沒有出現異常
     Death    ${element}
@@ -83,88 +77,70 @@ COMMON REPORT
     # 選擇疾病
     # 畫面dialog跳動頻繁, 中間sleep以確保畫面切換
     Disease Category    ${element}
-
     # 發病日/無發病日區塊
     Sick Date    ${element}
-
     # 診斷日期
     Diagnose Day    ${element}
-    
     # 報告日期
     Report Day    ${element}
-    
-
-
     
     # 有無症狀
     Click Element    //*[@id="diseaseReportData"]/div[3]/div/div
     Sleep    20ms
     IF    '${element}[HAS_SYMPTOM]' != 'None'
         IF    ${element}[HAS_SYMPTOM] == $True
-        Click Element    //*[@id="ReportDisease_symp"]/div[1]/label
-        Sleep    200ms
-        # 注意, 以@類型接收
-        @{symptoms}    Split String    ${element}[SYMPTOMS]    ,
-        
-        FOR    ${smp}    IN    @{symptoms}
-            Log To Console    ${smp}
-            Click Element    //label[contains(text(), '${smp}')]
-            # 點選'其他新冠感染相關併發症'
-            IF    '${smp}' == '其他新冠感染相關併發症'
-                @{other_symtoms}    Split String    ${element}[OTHER_SYMPTOM]    ,
-                FOR    ${other_smp}    IN    @{other_symtoms}
-                    Log To Console    ${other_smp}
-                    Click Element    //label[contains(text(), '${other_smp}')]
+            Click Element    //*[@id="ReportDisease_symp"]/div[1]/label
+            Sleep    200ms
+            # 注意, 以@類型接收
+            @{symptoms}    Split String    ${element}[SYMPTOMS]    ,
+            
+            FOR    ${smp}    IN    @{symptoms}
+                Log To Console    ${smp}
+                Click Element    //label[contains(text(), '${smp}')]
+                # 點選'其他新冠感染相關併發症'
+                IF    '${smp}' == '其他新冠感染相關併發症'
+                    @{other_symtoms}    Split String    ${element}[OTHER_SYMPTOM]    ,
+                    FOR    ${other_smp}    IN    @{other_symtoms}
+                        Log To Console    ${other_smp}
+                        Click Element    //label[contains(text(), '${other_smp}')]
+                    END
                 END
             END
-        END
         ELSE
         Click Element    //*[@id="ReportDisease_symp"]/div[2]/label
         END
-        Sleep    1s
     END
     
-    
-    
     #快篩結果
-    Click Element    //*[@id="diseaseReportData"]/div[7]/div[1]/div[2]
-    Sleep    1s
+    Scroll Element Into View    //*[@id="diseaseReportData"]/div[7]/div[1]/div[2]
+    # Click Element    //*[@id="diseaseReportData"]/div[7]/div[1]/div[2]
+    # Sleep    1s
     IF    '${element}[RAPID_TEST]' != 'None'
         IF    ${element}[RAPID_TEST] == $True
             Click Element    //*[@id="ReportDisease_19CVS_S_QS19CVS330"]/div[1]/label        
         ELSE
             Click Element    //*[@id="ReportDisease_19CVS_S_QS19CVS330"]/div[2]/label        
         END
-            ${tmpday}    Get Taiwain Date String    ${element}[RAPID_TEST_DATE]
-            Input Text    //*[@id="ReportDisease_19CVS_S_19CVS_00053"]    ${tmpday}
+            Transfer Taiwan Date    ${element}[RAPID_TEST_DATE]    //*[@id="ReportDisease_19CVS_S_19CVS_00053"]
             Input Text    //input[@id="ReportDisease_19CVS_S_QS19CVS334_AS19CVS334"]    ${element}[RAPID_TEST_COMPANY]
-            ${tmpday}    Get Taiwain Date String    ${element}[RAPID_TEST_REPORT_DATE]
-            Input Text    //*[@id="ReportDisease_19CVS_S_QS19CVS335_AS19CVS335"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
-        
+            Transfer Taiwan Date    ${element}[RAPID_TEST_REPORT_DATE]    //*[@id="ReportDisease_19CVS_S_QS19CVS335_AS19CVS335"]
     END
             
 
     #PCR結果
-    Click Element    //*[@id="diseaseReportData"]/div[7]/div[2]/div[2]
+    Scroll Element Into View    //*[@id="diseaseReportData"]/div[7]/div[2]/div[2]
+    # Click Element    //*[@id="diseaseReportData"]/div[7]/div[2]/div[2]
     IF    '${element}[PCR_TEST]' != 'None'
         IF    ${element}[PCR_TEST] == $True
-        Click Element    //*[@id="ReportDisease_19CVS_S_QS19CVS340"]/div[1]/label
-    ELSE
-        Click Element    //*[@id="ReportDisease_19CVS_S_QS19CVS340"]/div[2]/label
-    END
-        ${tmpday}    Get Taiwain Date String    ${element}[PCR_DATE]
-        Input Text    //*[@id="ReportDisease_19CVS_S_19CVS_00054"]    ${tmpday}
+            Click Element    //*[@id="ReportDisease_19CVS_S_QS19CVS340"]/div[1]/label
+        ELSE
+            Click Element    //*[@id="ReportDisease_19CVS_S_QS19CVS340"]/div[2]/label
+        END
+        Transfer Taiwan Date    ${element}[PCR_DATE]    //*[@id="ReportDisease_19CVS_S_19CVS_00054"]
         Input Text    //input[@id="ReportDisease_19CVS_S_QS19CVS344_AS19CVS344"]    ${element}[PCR_TEST_COMPANY]
-        ${tmpday}    Get Taiwain Date String    ${element}[PCR_REPORT_DATE]
-        Input Text    //*[@id="ReportDisease_19CVS_S_QS19CVS345_AS19CVS345"]    ${tmpday}
-        Sleep    1s
-        Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]           
+        Transfer Taiwan Date    ${element}[PCR_REPORT_DATE]    //*[@id="ReportDisease_19CVS_S_QS19CVS345_AS19CVS345"]         
     END
     
-
-
     # 職業
     IF    '${element}[OCCUPATION]' != 'None'
         Select From List By Label    id=ReportDisease_mainProfSel    ${element}[OCCUPATION]        
@@ -175,24 +151,12 @@ COMMON REPORT
         Input Text    id=ReportDisease_mainProfdetail    ${element}[OCCUPATION_DESCRIPTION]
     END
 
-
     # 旅遊史
     # 旅遊史無法複選 國外旅遊及居住的國家id會持續變動
     Travel_History    ${element}
 
-
     #接觸史
-    IF    '${element}[ANIMAL_CONTACT_HISTORY]' != 'None'
-        IF    '${element}[ANIMAL_CONTACT_HISTORY]' != $True
-            Click Element    //label[@for="ReportDisease_mainContact_Y"]
-            Sleep    200ms
-            Click Element    id=ReportDisease_mainContact_type
-            Select From List By Label    id=ReportDisease_mainContact_type    ${element}[ANIMAL_TYPE]
-        ELSE
-            Click Element    //label[@for="ReportDisease_mainContact_N"]
-        END
-
-        # 注意, 以@類型接收
+    IF    '${element}[CONTACT_HISTORY]' != 'None'
         @{contact_history}    Split String    ${element}[CONTACT_HISTORY]    ,
         
         FOR    ${history}    IN    @{contact_history}
@@ -201,6 +165,18 @@ COMMON REPORT
         END
     END
 
+    #動物接觸史
+    IF    '${element}[ANIMAL_CONTACT_HISTORY]' != 'None'
+        IF    '${element}[ANIMAL_CONTACT_HISTORY]' == $True
+            Click Element    //label[@for="ReportDisease_mainContact_Y"]
+            Sleep    200ms
+            Click Element    id=ReportDisease_mainContact_type
+            Select From List By Label    id=ReportDisease_mainContact_type    ${element}[ANIMAL_TYPE]
+        ELSE
+            Click Element    //label[@for="ReportDisease_mainContact_N"]
+        END
+    END
+    
 
     # 慢性病
     IF    '${element}[CHRONIC]' != 'None'
@@ -212,7 +188,16 @@ COMMON REPORT
             @{chronic_symptoms}    Split String    ${element}[CHRONIC_SYMPTOMS]   ,
             FOR    ${chronic_smp}    IN    @{chronic_symptoms}
                 Log To Console    ${chronic_smp}
-                Click Element    //label[contains(text(), '${chronic_smp}')]            
+                Click Element    //label[contains(text(), '${chronic_smp}')]
+                IF    '${chronic_smp}' == '免疫低下狀態'
+                    Input Text    ReportDisease_19CVS_S_19CVS_00015    ${element}[IMMUNOCOMPROMISED]                    
+                END
+                IF    '${chronic_smp}' == '懷孕'
+                    Input Text    ReportDisease_19CVS_S_19CVS_00017    ${element}[PREGNANT]                   
+                END
+                IF    '${chronic_smp}' == '其他：'
+                    Input Text    ReportDisease_19CVS_S_19CVS_00022    ${element}[OTHER_CHRONIC_SYMPTOMS]                    
+                END
             END
             ELSE
                 Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00004_select"]/div[2]/label
@@ -220,16 +205,12 @@ COMMON REPORT
         END
     END
     
-
     # 侵入性治療
     # 僅測試首日
     IF    '${element}[INTUBATION]' != 'None'
         IF    ${element}[INTUBATION] == $True
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00023"]
-            ${tmpday}    Get Taiwain Date String    ${element}[FIRST_INTUBATION]
-            Input Text    //*[@id="ReportDisease_19CVS_S_19CVS_00025"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
+            Transfer Taiwan Date    ${element}[FIRST_INTUBATION]    //*[@id="ReportDisease_19CVS_S_19CVS_00025"]  
         ELSE
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00024"]
         END
@@ -238,16 +219,11 @@ COMMON REPORT
     IF    '${element}[ECMO]' != 'None'
         IF    ${element}[ECMO] == $True
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00027"]
-            ${tmpday}    Get Taiwain Date String    ${element}[FIRST_ECMO]
-            Input Text    //*[@id="ReportDisease_19CVS_S_19CVS_00029"]    ${tmpday}
-            Sleep    1s
-            Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]   
+            Transfer Taiwan Date    ${element}[FIRST_ECMO]    //*[@id="ReportDisease_19CVS_S_19CVS_00029"]  
         ELSE
             Click Element    //label[@for="ReportDisease_19CVS_S_19CVS_00028"]
         END
     END
-        
-
 
     # 氧治療
     IF    '${element}[O2CURE]' != 'None'
@@ -298,13 +274,11 @@ Update Report
     Wait Until Page Contains    ${element_id}[REPORT_ID]
     #點選增修功能
     Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
-    Sleep    2s
     #資料增修
     COMMON REPORT    ${element}
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Sleep    1s
     Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
 
