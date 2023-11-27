@@ -26,16 +26,18 @@ Report Search
     
     # 點擊通報單查詢管理
     Click Element    id=104
-    Sleep    500ms
+    Wait Until Page Contains    地點
     
     # 點擊查詢
     Click Button    id=btn_query
-    Sleep    2000ms
+    Wait Until Page Contains    登出
+    Sleep    1s
     
     # 驗證資料?
     # 處理查無資料
     ${element_exists}    Run Keyword And Return Status    Page Should Contain Element    xpath=/html/body/div[8]/div/div/div[3]
     Log To Console    是否無資料?${element_exists}
+    
     Run Keyword If    ${element_exists}    Click Element    xpath=/html/body/div[8]/div/div/div[3]/div/a
     Wait Until Element Contains    id=navbarDropdownUser2    ${element}[Expected]
 
