@@ -21,18 +21,18 @@ Read Excel
 Report Search
     [Arguments]    ${element}
     # 等待使用者單位顯示
-    Wait Until Page Contains    通報單查詢管理
-    Sleep    200ms
+    Sleep    500ms
+    Wait Until Page Contains Element    id=Menu2
     
     # 點擊通報單查詢管理
     Click Element    id=104
-    Wait Until Page Contains    地點
+    Sleep    500ms
+    Wait Until Page Contains Element    id=cdcMainContent
     
     # 點擊查詢
     Click Button    id=btn_query
-    Wait Until Page Contains    登出
-    Sleep    1s
-    
+    Wait Until Page Contains Element    id=cdcMainHeader
+    Sleep    500ms
     # 驗證資料?
     # 處理查無資料
     ${element_exists}    Run Keyword And Return Status    Page Should Contain Element    xpath=/html/body/div[8]/div/div/div[3]

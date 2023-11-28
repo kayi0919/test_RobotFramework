@@ -62,7 +62,7 @@ Login
     #Press Keys    None    ${element}[Password]
     Input Text    id=txt_user_password    ${element}[Password]
     Click Element   xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/button
-    Wait Until Page Contains    通報單查詢管理
+    Wait Until Page Contains Element    id=Menu2
 
 
 Read Report Excel

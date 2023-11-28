@@ -32,7 +32,9 @@ COMMON REPORT
         Log To Console    點擊新增通報單
         Click Element    id=101        
     END
-    Wait Until Page Contains Element    id=casePatient_Idno   
+    # Wait Until Page Contains Element    id=casePatient_Idno
+    Wait Until Page Does Not Contain Element    id=formData_loading
+    Wait Until Page Contains Element    id=Menu2   
     # 診斷醫師
     Diagnostician    ${element}
     # 身分證統一編號
@@ -152,6 +154,7 @@ COMMON REPORT
             END
             IF    ${hiv} == 4
                 Click Element    //label[@for="ReportDisease_044_S_044_00016"]
+                Wait Until Page Contains Element    id=ReportDisease_044_S_044_00016_area
                 IF    '${element}[P24_TEST_DATE]' != 'None'
                     Transfer Taiwan Date    ${element}[P24_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00017"]
                     Click Element    id=ReportDisease_044_S_044_00018_name                    
