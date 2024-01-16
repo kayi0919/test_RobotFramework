@@ -11,8 +11,12 @@ Resource   ..\\keywords\\Variables.robot
 ${screenshot}
 ${test_users}
 ${test_reports}
+${test_id}
+${test_update}
 ${item_result}
+${item_function}
 ${item_num}
+${report_id}
 
 *** Keywords ***
 COMMON REPORT
@@ -22,12 +26,18 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
-
-    Log To Console    點擊新增通報單
-    Click Element    id=101
-    # Wait Until Page Contains Element    id=casePatient_Idno
-    Wait Until Page Does Not Contain Element    id=formData_loading
-    Wait Until Page Contains Element    id=Menu2
+    
+    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Security Statement
+    Wait Until Page Contains Element    id=104
+    
+    IF    ${element}[FUNCTION] == 1
+        Log To Console    點擊新增通報單
+        Click Element    id=101        
+    END
+    Wait Loading Status
+    
+    Wait Until Page Contains Element    id=casePatient_Idno
     # 診斷醫師
     Diagnostician    ${element}
     # 身分證統一編號
@@ -93,17 +103,59 @@ COMMON REPORT
     # 旅遊史
     Travel_History    ${element}
 
-    # 確定通報
-    Create Data
-    ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
-    # 透過等待畫面出現縣市, 以確保資料讀取完成, 再進行截圖
-    Wait Until Page Contains    ${element}[COUNTY]
-    # 截圖佐證
-    Capture Page Screenshot    ${screenshot}\\simple_report_MED_${element}[DISEASE].png
+    #增修原因
+    IF    '${element}[UPDATE_REASON]' != 'None'
+        Input Text    //textarea[@id="casePatient_ModifyReason"]    ${element}[UPDATE_REASON]
+    END
 
-    Log To Console    ${report_id}
+    # 新增通報
+    Set Global Variable    ${item_function}    ${element}[FUNCTION]
+    IF    ${element}[FUNCTION] == 1
+        Create Data
+        ${report_id}    Get Text    xpath=/html/body/div[2]/div[2]/main/div[2]/div/div/div[1]/div[1]/span[1]/a
+        # 透過等待畫面出現縣市, 以確保資料讀取完成, 再進行截圖
+        Wait Until Page Contains    ${element}[COUNTY]
+        # 截圖佐證
+        Capture Page Screenshot    ${screenshot}\\simple_report_MED_${element}[DISEASE]_${element}[Num].png
+        Log To Console    ${report_id}
 
+        Set Global Variable    ${item_result}    ${True}
+        #讀取編號
+        Write ID Excel    ${report_id}    ${element}[Num]    Data_ID.xlsx
+        Set Global Variable    ${report_id}
+    END
+
+
+Update Report
+    #增修資料(不修改地址)
+    [Arguments]    ${element}    ${element_id}
+    Set Global Variable    ${item_result}    ${False}
+    
+    #成功頁面複製編號
+    #Click Element    //div[@id="report_complete_disease_area"]/div/div[1]/div/a    #只執行增修功能 此行需註解
+    #Press Keys    id=quick_search_field    CTRL+v
+    
+    Click Element    id=quick_search_field
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
+    
+    Click Element    //*[@id="headersearch"]/div
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    #點選增修功能
+    Click Element    //tbody[@id="searchResult"]/tr/td[last()]/a
+    #資料增修
+    COMMON REPORT    ${element}
+    #增修通報
+    Update Data
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    Capture Page Screenshot    ${screenshot}\\simple_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
+
+    Click Element    id=quick_search_field
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
+    Click Element    //*[@id="headersearch"]/div
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    Capture Page Screenshot    ${screenshot}\\simple_report_MED_Update_Check_${element}[Num].png
+
 
 *** Tasks ***
 Smoke Test Report Simple
@@ -112,17 +164,21 @@ Smoke Test Report Simple
     [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}    
+    Clean Excel    Data_ID.xlsx
+    Clean Excel    Data_Result.xlsx
     Read Report Excel    robot_CDC_NIDRS_report_simple.xlsx
     # 路徑不見處理 新增路徑
     Create Directory    ${screenshot}    resource=false
     # 清除截圖路徑
     Remove Directory    ${screenshot}    resource=true
+
     FOR    ${element}    IN    @{test_users}
         Login    ${element}    ${NIDRS_WEB_URL}
 
         FOR    ${report}    IN    @{test_reports}
             TRY
                 Run Keyword And Continue On Failure    COMMON REPORT    ${report}
+                Write Result Excel    ${item_function}    ${item_num}    ${report}[EXPECTED]    ${item_result}    Data_Result.xlsx
                 Run Keyword If    ${item_result} == ${False}
                 ...    Capture Page Screenshot    ${screenshot}\\simple_report_MED_${report}[DISEASE]_Error.png
 
@@ -138,6 +194,35 @@ Smoke Test Report Simple
                 END                
             END
             Clear Error
+        END
+
+        # 測試2 增修
+        Read ID Excel    Data_ID.xlsx
+        Read Update Excel    robot_CDC_NIDRS_report_simple.xlsx
+        FOR    ${update}    IN    @{test_update}
+            FOR    ${id}    IN    @{test_id}
+                IF    ${id}[Num] == ${update}[Num]
+                    TRY
+                        Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
+                        Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
+                        Run Keyword If    ${item_result} == ${False}
+                        ...    Capture Page Screenshot    ${screenshot}\\simple_report_MED_UPDATE_${update}[Num]_Error.png
+                        
+                        # 預期False 結果Pass
+                        # 若這裡錯誤會再執行except一次
+                        IF    ${item_result} != ${update}[EXPECTED]                            
+                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                        END
+                    EXCEPT
+                        # 預期Pass 結果False
+                        IF    ${item_result} != ${update}[EXPECTED]                            
+                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                        END                        
+                    END
+                    Clear Error
+                END
+                
+            END
         END
         Run Keyword And Ignore Error    Logout
     END

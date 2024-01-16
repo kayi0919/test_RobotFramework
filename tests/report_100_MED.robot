@@ -26,13 +26,18 @@ COMMON REPORT
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
     
+    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Security Statement
+    Wait Until Page Contains Element    id=104
+    
     IF    ${element}[FUNCTION] == 1
+        
         Log To Console    點擊新增通報單
         Click Element    id=101        
     END
-    # Wait Until Page Contains Element    id=casePatient_Idno
-    Wait Until Page Does Not Contain Element    id=formData_loading
-    Wait Until Page Contains Element    id=Menu2  
+
+    Wait Loading Status
+    Wait Until Page Contains Element    id=casePatient_Idno  
     # 診斷醫師
     Diagnostician    ${element}
     # 身分證統一編號
@@ -213,6 +218,13 @@ Update Report
     Wait Until Page Contains    ${element_id}[REPORT_ID]
     Capture Page Screenshot    ${screenshot}\\100_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
+
+    Click Element    id=quick_search_field
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
+    Click Element    //*[@id="headersearch"]/div
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    Capture Page Screenshot    ${screenshot}\\100_report_MED_Update_Check_${element}[Num].png
+
 
 
 

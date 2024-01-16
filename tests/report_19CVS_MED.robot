@@ -28,13 +28,19 @@ COMMON REPORT
     
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
+
+    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Security Statement
+    Wait Until Page Contains Element    id=104
+
     IF    ${element}[FUNCTION] == 1
         Log To Console    點擊新增通報單
         Click Element    id=101        
-    END   
-    # Wait Until Page Contains Element    id=casePatient_Idno
-    Wait Until Page Does Not Contain Element    id=formData_loading
-    Wait Until Page Contains Element    id=Menu2
+    END
+    
+    Wait Loading Status
+    
+    Wait Until Page Contains Element    id=casePatient_Idno
     # 診斷醫師
     Diagnostician    ${element}
     # 身分證統一編號
@@ -81,8 +87,10 @@ COMMON REPORT
     Disease Category    ${element}
     # 發病日/無發病日區塊
     Sick Date    ${element}
+
     # 診斷日期
     Diagnose Day    ${element}
+
     # 報告日期
     Report Day    ${element}
     
@@ -183,27 +191,27 @@ COMMON REPORT
     # 慢性病
     IF    '${element}[CHRONIC]' != 'None'
         IF    ${element}[CHRONIC] == $True
-        Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00004_select"]/div[1]/label
-        Sleep    200ms
-        IF    '${element}[CHRONIC_SYMPTOMS]' != 'None'
-            # 注意, 以@類型接收
-            @{chronic_symptoms}    Split String    ${element}[CHRONIC_SYMPTOMS]   ,
-            FOR    ${chronic_smp}    IN    @{chronic_symptoms}
-                Log To Console    ${chronic_smp}
-                Click Element    //label[contains(text(), '${chronic_smp}')]
-                IF    '${chronic_smp}' == '免疫低下狀態'
-                    Input Text    ReportDisease_19CVS_S_19CVS_00015    ${element}[IMMUNOCOMPROMISED]                    
-                END
-                IF    '${chronic_smp}' == '懷孕'
-                    Input Text    ReportDisease_19CVS_S_19CVS_00017    ${element}[PREGNANT]                   
-                END
-                IF    '${chronic_smp}' == '其他：'
-                    Input Text    ReportDisease_19CVS_S_19CVS_00022    ${element}[OTHER_CHRONIC_SYMPTOMS]                    
-                END
+            Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00004_select"]/div[1]/label
+            Sleep    200ms
+            IF    '${element}[CHRONIC_SYMPTOMS]' != 'None'
+                # 注意, 以@類型接收
+                @{chronic_symptoms}    Split String    ${element}[CHRONIC_SYMPTOMS]   ,
+                FOR    ${chronic_smp}    IN    @{chronic_symptoms}
+                    Log To Console    ${chronic_smp}
+                    Click Element    //label[contains(text(), '${chronic_smp}')]
+                    IF    '${chronic_smp}' == '免疫低下狀態'
+                        Input Text    ReportDisease_19CVS_S_19CVS_00015    ${element}[IMMUNOCOMPROMISED]                    
+                    END
+                    IF    '${chronic_smp}' == '懷孕'
+                        Input Text    ReportDisease_19CVS_S_19CVS_00017    ${element}[PREGNANT]                   
+                    END
+                    IF    '${chronic_smp}' == '其他：'
+                        Input Text    ReportDisease_19CVS_S_19CVS_00022    ${element}[OTHER_CHRONIC_SYMPTOMS]                    
+                    END
+                END            
             END
-            ELSE
-                Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00004_select"]/div[2]/label
-            END            
+        ELSE
+                Click Element    //*[@id="ReportDisease_19CVS_S_19CVS_00004_select"]/div[2]/label        
         END
     END
     
@@ -283,6 +291,12 @@ Update Report
     Wait Until Page Contains    ${element_id}[REPORT_ID]
     Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
+
+    Click Element    id=quick_search_field
+    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
+    Click Element    //*[@id="headersearch"]/div
+    Wait Until Page Contains    ${element_id}[REPORT_ID]
+    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_Check_${element}[Num].png
 
 
 *** Tasks ***

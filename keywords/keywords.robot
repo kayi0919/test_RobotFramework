@@ -62,12 +62,13 @@ Login
     #Press Keys    None    ${element}[Password]
     Input Text    id=txt_user_password    ${element}[Password]
     Click Element   xpath=/html/body/main/div[1]/div[6]/div/div/div[2]/button
-    Wait Until Page Contains Element    id=Menu2
-
+    Wait Loading Status
+    Wait Until Page Contains Element    id=101
 
 Read Report Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
     
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
@@ -79,6 +80,7 @@ Read Report Excel
 Clean Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
     Delete Rows    start=4    end=100
     Save Workbook
     Close Workbook
@@ -87,6 +89,7 @@ Clean Excel
 Read ID Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
     ${sheet3}=    Read Worksheet    name=ID   header=True    start=3
     Log To Console    \r\n${sheet3}
     Close Workbook
@@ -95,6 +98,7 @@ Read ID Excel
 Read Update Excel
     [Arguments]    ${file}
     Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
     ${sheet4}=    Read Worksheet    name=update   header=True    start=3
     Log To Console    \r\n${sheet4}
     Close Workbook
@@ -104,6 +108,7 @@ Read Update Excel
 Write ID Excel
     [Arguments]    ${data_id}    ${data_num}    ${file}
     Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
     ${table}    Create Dictionary    報表編號=${data_id}    序號=${data_num}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
@@ -112,6 +117,7 @@ Write ID Excel
 Write Result Excel
     [Arguments]    ${data_function}    ${data_num}    ${data_expected}    ${data_result}    ${file}
     Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
     ${table}    Create Dictionary    功能=${data_function}    序號=${data_num}    預期=${data_expected}    結果=${data_result}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
@@ -123,6 +129,25 @@ Transfer Taiwan Date
     Input Text    ${locator}    ${tmpday}
     Wait Until Page Contains Element    //div[@id="ui-datepicker-div"]/div[2]/button[2]
     Click Button    //div[@id="ui-datepicker-div"]/div[2]/button[2]
+
+Wait Security Statement
+    ${element_exists}    Run Keyword And Return Status    Page Should Contain    同意條款
+    Log To Console    是否Security Statement?${element_exists}
+    IF    ${element_exists} == $True
+        Click Element    //label[@for="make-sure"]
+        Click Button    id=signStatement
+    END
+    Sleep    500ms
+
+
+Wait Loading Status
+    # ${element_exists}    Run Keyword And Return Status    Page Should Contain Element    id=formData_loading
+    ${element_exists}    Run Keyword And Return Status    Page Should Contain    資料處理中
+    Log To Console    是否loading?${element_exists}
+    IF    ${element_exists} == $True
+        Sleep    2s
+    END
+    
 
 Diagnostician
     [Arguments]    ${element}
@@ -428,10 +453,14 @@ Travel_History
             IF    '${element}[MAIN_TRAVAL]' == '2'
                 #國外旅遊
                 Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[3]/div/label                
-                Wait Until Page Contains Element    //*[@id="_easyui_textbox_input6"]
-                Click Element    //*[@id="_easyui_textbox_input6"]
+                Wait Until Page Contains Element    id=ReportDisease_inCountry_0_county
+                Click Element    id=ReportDisease_outCountryArea
+                Click Element    //*[@id="ReportDisease_outCountry_0"]/div[1]/span/span
                 Sleep    200ms
-                Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY]
+                #新增
+                Run Keyword And Ignore Error    Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY]
+                #修改
+                Run Keyword And Ignore Error    Input Text    id=_easyui_textbox_input8    ${element}[OUT_COUNTRY]
                 Sleep    500ms            
                 Transfer Taiwan Date    ${element}[OUT_COUNTRY_START]    //*[@id="ReportDisease_outCountry_0_start"] 
                 Transfer Taiwan Date    ${element}[OUT_COUNTRY_END]    //*[@id="ReportDisease_outCountry_0_end"]
@@ -439,10 +468,14 @@ Travel_History
             IF    '${element}[MAIN_TRAVAL]' == '3'
                 #國外居住
                 Click Element    //*[@id="ReportDisease_mainTrav_area"]/div[5]/div/label
-                Wait Until Page Contains Element    //*[@id="_easyui_textbox_input6"]
-                Click Element    //*[@id="_easyui_textbox_input6"]
+                Wait Until Page Contains Element    id=ReportDisease_inCountry_0_county
+                Click Element    id=ReportDisease_outCountryLiveArea
+                Click Element    //*[@id="ReportDisease_outCountryLive_0"]/div[1]/span/span
                 Sleep    200ms
-                Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY_LIVE]
+                #新增
+                Run Keyword And Ignore Error    Input Text    id=_easyui_textbox_input6    ${element}[OUT_COUNTRY_LIVE]
+                #修改
+                Run Keyword And Ignore Error    Input Text    id=_easyui_textbox_input8    ${element}[OUT_COUNTRY_LIVE]
                 Sleep    500ms
                 Transfer Taiwan Date    ${element}[DEPARTURE_DATE]    //*[@id="ReportDisease_outCountryLive_0_county_out"]
                 Transfer Taiwan Date    ${element}[ENTRY_DATE]    //*[@id="ReportDisease_outCountryLive_0_county_in"]  
@@ -471,15 +504,18 @@ Update Data
     Wait Until Page Contains    確認是否送出通報單
     Sleep    1s
     Click Button    //*[@id="_dialog"]/div/div/div[3]/div[1]/button
-    Sleep    1s
-
-    Wait Until Page Contains    確定增修以下內容
-    Sleep    1s
-    Click Button    //div[@id="editFieldConfirmModal"]/div/div/div/button[1]
-    Sleep    1s
+    Wait Loading Status
+    
+    Run Keyword And Ignore Error    Wait Until Page Contains    確定增修以下內容
+    Run Keyword And Ignore Error    Click Button    //div[@id="editFieldConfirmModal"]/div/div/div/button[1]
+    
+    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Until Page Contains    修改個案居住地址
+    Run Keyword And Ignore Error    Click Button    //div[@id="transferConfirmModal"]/div/div/div/button[1]
+    Wait Loading Status
 
     Wait Until Page Contains    關閉
-    Sleep    1s
+    Wait Loading Status
     Click Element    //div[@id="alertDialog"]/div/div/div[3]/div/a
 
 
