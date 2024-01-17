@@ -27,7 +27,7 @@ Report Search
     [Arguments]    ${element}
     
     # 等待使用者單位顯示
-    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Loading Status
     Run Keyword And Ignore Error    Wait Security Statement
     Wait Until Page Contains Element    id=104
     
@@ -36,6 +36,7 @@ Report Search
     Sleep    1s
     
     Wait Until Page Contains Element    id=cdcMainContent
+    Run Keyword And Ignore Error    Wait Loading Status
     
     # 點擊查詢
     Click Button    id=btn_query

@@ -28,7 +28,7 @@ COMMON REPORT
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
     
-    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Loading Status
     Run Keyword And Ignore Error    Wait Security Statement
     Wait Until Page Contains Element    id=104
     
@@ -38,7 +38,7 @@ COMMON REPORT
         Click Element    id=101        
     END
 
-    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Loading Status
     Wait Until Page Contains Element    id=casePatient_Idno   
     # 診斷醫師
     Diagnostician    ${element}
@@ -174,6 +174,7 @@ COMMON REPORT
                 END
                 Sleep    200ms
                 IF    '${element}[NEUTRAL_TEST_DATE]' != 'None'
+                    Click Element    //*[@id="ReportDisease_044_S_044_00016_area"]/div[3]
                     Transfer Taiwan Date    ${element}[NEUTRAL_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00019"]
                     Click Element    id=ReportDisease_044_S_044_00020_name                    
                     Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 

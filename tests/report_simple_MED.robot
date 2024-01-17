@@ -27,7 +27,7 @@ COMMON REPORT
     Set Global Variable    ${item_num}    ${element}[Num]
     Set Global Variable    ${item_result}    ${False}
     
-    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Loading Status
     Run Keyword And Ignore Error    Wait Security Statement
     Wait Until Page Contains Element    id=104
     
@@ -35,7 +35,7 @@ COMMON REPORT
         Log To Console    點擊新增通報單
         Click Element    id=101        
     END
-    Wait Loading Status
+    Run Keyword And Ignore Error    Wait Loading Status
     
     Wait Until Page Contains Element    id=casePatient_Idno
     # 診斷醫師
