@@ -4,10 +4,10 @@ Library          RPA.Browser.Selenium
 Library          RPA.Excel.Files
 Library          RPA.FileSystem
 Library    webdriver.py
-Resource         ../keywords/keywords.robot
-Resource         ../keywords/Variables.robot
-# Resource   ..\\keywords\\keywords.robot
-# Resource   ..\\keywords\\Variables.robot
+# Resource         ../keywords/keywords.robot
+# Resource         ../keywords/Variables.robot
+Resource   ..\\keywords\\keywords.robot
+Resource   ..\\keywords\\Variables.robot
 
 *** Variables ***
 ${screenshot}
@@ -16,8 +16,8 @@ ${test_result}    ${False}
 
 *** Keywords ***
 Read Excel
-    Open Workbook    ../testdata/robot_CDC_NIDRS_login.xlsx
-    # Open Workbook    testdata\\robot_CDC_NIDRS_login.xlsx
+    # Open Workbook    ../testdata/robot_CDC_NIDRS_login.xlsxk
+    Open Workbook    testdata\\robot_CDC_NIDRS_login.xlsx
     ${sheet1}    Read Worksheet    name=login   header=True
     Log To Console   \r\n${sheet1}
     Close Workbook
