@@ -164,7 +164,7 @@ COMMON REPORT
             END
             Sleep    200ms
 
-            IF    ${hiv} == 4
+            IF    ${hiv} == 4                
                 Click Element    //label[@for="ReportDisease_044_S_044_00016"]
                 Wait Until Page Contains Element    id=ReportDisease_044_S_044_00016_area
                 IF    '${element}[P24_TEST_DATE]' != 'None'
@@ -172,9 +172,10 @@ COMMON REPORT
                     Click Element    id=ReportDisease_044_S_044_00018_name                    
                     Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
                 END
-                Sleep    200ms
+                Sleep    3s
                 IF    '${element}[NEUTRAL_TEST_DATE]' != 'None'
-                    Click Element    //*[@id="ReportDisease_044_S_044_00016_area"]/div[3]
+                    Scroll Element Into View    id=ReportDisease_044_S_044_00020_name
+                    Sleep    500ms              
                     Transfer Taiwan Date    ${element}[NEUTRAL_TEST_DATE]    //*[@id="ReportDisease_044_S_044_00019"]
                     Click Element    id=ReportDisease_044_S_044_00020_name                    
                     Search Type    ${element}[HIV_SEARCH_TYPE]    ${element}[HIV_KEYWORD_SEARCH]    ${element}[HIV_APARTMENT_CITY]    ${element}[HIV_APARTMENT_TYPE] 
@@ -183,11 +184,13 @@ COMMON REPORT
             
         END
         
-    END
+    END    
     Sleep    200ms
 
     # 急性感染
     IF    '${element}[ACUTE_INFECTION]' != 'None'
+        Scroll Element Into View    //label[@for="ReportDisease_044_S_044_00021"]
+        Sleep    200ms
         IF    ${element}[ACUTE_INFECTION] == $True
             Click Element    //label[@for="ReportDisease_044_S_044_00021"]
             IF    '${element}[PROJECT_INSPECTION]' != 'None'
