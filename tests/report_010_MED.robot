@@ -381,7 +381,7 @@ COMMON REPORT
         # 透過等待畫面出現縣市, 以確保資料讀取完成, 再進行截圖
         Wait Until Page Contains    ${element}[COUNTY]
         # 截圖佐證
-        Capture Page Screenshot    ${screenshot}\\010_report_MED_${element}[DISEASE]_${element}[Num].png
+        Capture Page Screenshot    ${screenshot}\\010_report_MED_${element}[DISEASE]_${element}[No].png
         Log To Console    ${report_id}
 
         Set Global Variable    ${item_result}    ${True}
@@ -411,14 +411,12 @@ Update Report
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Capture Page Screenshot    ${screenshot}\\010_report_MED_Update_${element}[Num].png
     Set Global Variable    ${item_result}    ${True}
 
-    Click Element    id=quick_search_field
-    Input Text    id=quick_search_field    ${element_id}[REPORT_ID]
-    Click Element    //*[@id="headersearch"]/div
-    Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Capture Page Screenshot    ${screenshot}\\010_report_MED_Update_Check_${element}[Num].png
+    Sleep    1s
+    Click Element    //*[@id="parent"]/div[2]/div[3]/div[1]/nav/ul/a[3]
+    Sleep    1s
+    Capture Page Screenshot    ${screenshot}\\010_report_MED_Update_${element}[No].png
 
 
 *** Tasks ***
@@ -446,17 +444,17 @@ Smoke_WEB_MED_010_NEWREPORT_01
                 Run Keyword And Continue On Failure    COMMON REPORT    ${report}
                 Write Result Excel    ${item_function}    ${item_num}    ${report}[EXPECTED]    ${item_result}    Data_Result.xlsx
                 Run Keyword If    ${item_result} == ${False}
-                ...    Capture Page Screenshot    ${screenshot}\\010_report_MED_${report}[DISEASE]_${report}[Num]_Error.png
+                ...    Capture Page Screenshot    ${screenshot}\\010_report_MED_${report}[DISEASE]_${report}[No]_Error.png
                 
                 # 預期False 結果Pass
                 # 若這裡錯誤會再執行except一次
                 IF    ${item_result} != ${report}[EXPECTED]
-                    Run Keyword And Continue On Failure    Fail    功能:${report}[FUNCTION] 序號:${report}[Num]預期錯誤
+                    Run Keyword And Continue On Failure    Fail    編號:${report}[No] 功能:${report}[FUNCTION] 個案序號:${report}[Num] 預期錯誤
                 END
             EXCEPT
                 # 預期Pass 結果False
                 IF    ${item_result} != ${report}[EXPECTED]
-                    Run Keyword And Continue On Failure    Fail    功能:${report}[FUNCTION] 序號:${report}[Num]預期錯誤
+                    Run Keyword And Continue On Failure    Fail    編號:${report}[No] 功能:${report}[FUNCTION] 個案序號:${report}[Num] 預期錯誤
                 END                
             END
             Clear Error
@@ -472,17 +470,17 @@ Smoke_WEB_MED_010_NEWREPORT_01
                         Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
                         Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
                         Run Keyword If    ${item_result} == ${False}
-                        ...    Capture Page Screenshot    ${screenshot}\\010_report_MED_UPDATE_${update}[Num]_Error.png
+                        ...    Capture Page Screenshot    ${screenshot}\\010_report_MED_UPDATE_${update}[No]_Error.png
                         
                         # 預期False 結果Pass
                         # 若這裡錯誤會再執行except一次
                         IF    ${item_result} != ${update}[EXPECTED]                            
-                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                            Run Keyword And Continue On Failure    Fail    編號:${update}[No] 功能:${update}[FUNCTION] 個案序號:${update}[Num] 預期錯誤                            
                         END
                     EXCEPT
                         # 預期Pass 結果False
                         IF    ${item_result} != ${update}[EXPECTED]                            
-                            Run Keyword And Continue On Failure    Fail    功能:${update}[FUNCTION] 序號:${update}[Num]預期錯誤                            
+                            Run Keyword And Continue On Failure    Fail    編號:${update}[No] 功能:${update}[FUNCTION] 個案序號:${update}[Num] 預期錯誤                            
                         END                        
                     END
                     Clear Error

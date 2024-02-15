@@ -103,9 +103,27 @@ Read Update Excel
     Log To Console    \r\n${sheet4}
     Close Workbook
     Set Global Variable    ${test_update}    ${sheet4}
+
+
+Read Determin Excel
+    [Arguments]    ${file}
+    Open Workbook    testdata\\${file}
+    ${sheet5}=    Read Worksheet    name=determine   header=True    start=3
+    Log To Console    \r\n${sheet5}
+    Close Workbook
+    Set Global Variable    ${test_determine}    ${sheet5}
     
 
 Write ID Excel
+    [Arguments]    ${data_id}    ${data_num}    ${file}
+    Open Workbook    testdata\\${file}
+    # Open Workbook    ${file}
+    ${table}    Create Dictionary    報表編號=${data_id}    序號=${data_num}
+    Append Rows To Worksheet    ${table}    start=4
+    Save Workbook
+    Close Workbook
+
+Write DeterminId Excel
     [Arguments]    ${data_id}    ${data_num}    ${file}
     Open Workbook    testdata\\${file}
     # Open Workbook    ${file}
@@ -145,7 +163,7 @@ Wait Loading Status
     ${element_exists}    Run Keyword And Return Status    Page Should Contain    資料處理中
     Log To Console    是否loading?${element_exists}
     IF    ${element_exists} == $True
-        Sleep    2s
+        Sleep    3s
     END
     
 
@@ -514,7 +532,7 @@ Update Data
     Run Keyword And Ignore Error    Click Button    //div[@id="transferConfirmModal"]/div/div/div/button[1]
     Wait Loading Status
 
-    Wait Until Page Contains    關閉
+    Run Keyword And Ignore Error    Wait Until Page Contains    關閉
     Wait Loading Status
     Click Element    //div[@id="alertDialog"]/div/div/div[3]/div/a
 
