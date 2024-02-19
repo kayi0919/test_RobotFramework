@@ -5,8 +5,8 @@ Library    RPA.Excel.Files
 Library    String
 Library    RPA.FileSystem
 Library    RequestsLibrary
-Resource   ..\\keywords\\keywords.robot
-Resource   ..\\keywords\\Variables.robot
+Resource         ../keywords/keywords.robot${/}
+Resource         ../keywords/Variables.robot${/}
 
 *** Variables ***
 ${screenshot}
@@ -258,7 +258,7 @@ COMMON REPORT
         # 透過等待畫面出現縣市, 以確保資料讀取完成, 再進行截圖
         Wait Until Page Contains    ${element}[COUNTY]
         # 截圖佐證
-        Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_${element}[DISEASE]_${element}[No].png
+        Capture Page Screenshot    ${screenshot}/19CVS_report_MED_${element}[DISEASE]_${element}[No].png
         Log To Console    ${report_id}
 
         Set Global Variable    ${item_result}    ${True}
@@ -289,19 +289,19 @@ Update Report
     #增修通報
     Update Data
     Wait Until Page Contains    ${element_id}[REPORT_ID]
-    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_${element}[No].png
+    Capture Page Screenshot    ${screenshot}/19CVS_report_MED_Update_${element}[No].png
     Set Global Variable    ${item_result}    ${True}
 
     Sleep    1s
     Click Element    //*[@id="parent"]/div[2]/div[3]/div[1]/nav/ul/a[3]
     Sleep    1s
-    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_Update_${element}[No].png
+    Capture Page Screenshot    ${screenshot}/19CVS_report_MED_Update_${element}[No].png
 
 *** Tasks ***
-Smoke_WEB_MED_19CVS_NEWREPORT_01
+Smoke_WEB_MED_19CVS_NEWREPORT
     [Documentation]    煙霧測試:醫療院所嚴重特殊傳染性肺炎(併發症)通報
     [Tags]    Smoke
-    [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
+    [Setup]    Set Global Variable    ${screenshot}    testresult/${TEST_NAME}${/}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Clean Excel    Data_ID.xlsx
@@ -322,7 +322,7 @@ Smoke_WEB_MED_19CVS_NEWREPORT_01
                 Run Keyword And Continue On Failure    COMMON REPORT    ${report}
                 Write Result Excel    ${item_function}    ${item_num}    ${report}[EXPECTED]    ${item_result}    Data_Result.xlsx
                 Run Keyword If    ${item_result} == ${False}
-                ...    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_${report}[DISEASE]_${report}[No]_Error.png
+                ...    Capture Page Screenshot    ${screenshot}/19CVS_report_MED_${report}[DISEASE]_${report}[No]_Error.png
                 
                 # 預期False 結果Pass
                 # 若這裡錯誤會再執行except一次
@@ -348,7 +348,7 @@ Smoke_WEB_MED_19CVS_NEWREPORT_01
                         Run Keyword And Continue On Failure    Update Report    ${update}    ${id}
                         Write Result Excel    ${item_function}    ${item_num}    ${update}[EXPECTED]    ${item_result}    Data_Result.xlsx
                         Run Keyword If    ${item_result} == ${False}
-                        ...    Capture Page Screenshot    ${screenshot}\\19CVS_report_MED_UPDATE_${update}[No]_Error.png
+                        ...    Capture Page Screenshot    ${screenshot}/19CVS_report_MED_UPDATE_${update}[No]_Error.png
                         
                         # 預期False 結果Pass
                         # 若這裡錯誤會再執行except一次

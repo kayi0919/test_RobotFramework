@@ -4,10 +4,8 @@ Library          RPA.Browser.Selenium
 Library          RPA.Excel.Files
 Library          RPA.FileSystem
 Library    webdriver.py
-# Resource         ../keywords/keywords.robot
-# Resource         ../keywords/Variables.robot
-Resource   ..\\keywords\\keywords.robot
-Resource   ..\\keywords\\Variables.robot
+Resource         ../keywords/keywords.robot${/}
+Resource         ../keywords/Variables.robot${/}
 
 *** Variables ***
 ${screenshot}
@@ -16,8 +14,7 @@ ${test_result}    ${False}
 
 *** Keywords ***
 Read Excel
-    # Open Workbook    ../testdata/robot_CDC_NIDRS_login.xlsx
-    Open Workbook    testdata\\robot_CDC_NIDRS_login.xlsx
+    Open Workbook    ./testdata/robot_CDC_NIDRS_login.xlsx${/}
     ${sheet1}    Read Worksheet    name=login   header=True
     Log To Console   \r\n${sheet1}
     Close Workbook
@@ -58,8 +55,8 @@ Report Search
 Smoke Test Login And Query
     [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
-    [Setup]    Set Global Variable    ${screenshot}    testresult\\${TEST_NAME}
-    # [Setup]    Set Global Variable    ${screenshot}    ${TEST_NAME}
+    [Setup]    Set Global Variable    ${screenshot}    testresult/${TEST_NAME}${/}
+
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}    options=add_argument("--ignore-certificate-errors")
     Read Excel
     # 路徑不見處理 新增路徑
