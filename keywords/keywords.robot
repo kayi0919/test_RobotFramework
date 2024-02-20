@@ -67,7 +67,7 @@ Login
 
 Read Report Excel
     [Arguments]    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${sheet1}    Read Worksheet    name=login    header=True
     ${sheet2}=    Read Worksheet    name=report   header=True    start=3    #第一二行是說明, 第三行是標頭
     Log To Console    \r\n${sheet1}\r\n${sheet2}
@@ -77,7 +77,7 @@ Read Report Excel
 
 Clean Excel
     [Arguments]    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     Delete Rows    start=4    end=100
     Save Workbook
     Close Workbook
@@ -85,7 +85,7 @@ Clean Excel
 
 Read ID Excel
     [Arguments]    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${sheet3}=    Read Worksheet    name=ID   header=True    start=3
     Log To Console    \r\n${sheet3}
     Close Workbook
@@ -93,7 +93,7 @@ Read ID Excel
     
 Read Update Excel
     [Arguments]    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${sheet4}=    Read Worksheet    name=update   header=True    start=3
     Log To Console    \r\n${sheet4}
     Close Workbook
@@ -102,7 +102,7 @@ Read Update Excel
 
 Read Determin Excel
     [Arguments]    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${sheet5}=    Read Worksheet    name=determine   header=True    start=3
     Log To Console    \r\n${sheet5}
     Close Workbook
@@ -111,7 +111,7 @@ Read Determin Excel
 
 Write ID Excel
     [Arguments]    ${data_id}    ${data_num}    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${table}    Create Dictionary    報表編號=${data_id}    序號=${data_num}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
@@ -119,7 +119,7 @@ Write ID Excel
 
 Write DeterminId Excel
     [Arguments]    ${data_id}    ${data_num}    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${table}    Create Dictionary    報表編號=${data_id}    序號=${data_num}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook
@@ -127,7 +127,7 @@ Write DeterminId Excel
 
 Write Result Excel
     [Arguments]    ${data_function}    ${data_num}    ${data_expected}    ${data_result}    ${file}
-    Open Workbook    ./testdata/${file}${/}
+    Open Workbook    .${/}testdata${/}${file}
     ${table}    Create Dictionary    功能=${data_function}    序號=${data_num}    預期=${data_expected}    結果=${data_result}
     Append Rows To Worksheet    ${table}    start=4
     Save Workbook

@@ -6,8 +6,8 @@ Library    String
 Library    RPA.FileSystem
 Library    Collections
 Library    Telnet
-Resource         ../keywords/keywords.robot${/}
-Resource         ../keywords/Variables.robot${/}
+Resource         ..${/}keywords${/}keywords.robot
+Resource         ..${/}keywords${/}Variables.robot
 
 
 *** Variables ***
@@ -225,7 +225,7 @@ Update Report
 Smoke_WEB_MED_098_NEWREPORT
     [Documentation]    煙霧測試:醫療院所淋病通報
     [Tags]    Smoke
-    [Setup]    Set Global Variable    ${screenshot}    testresult/${TEST_NAME}${/}
+    [Setup]    Set Global Variable    ${screenshot}    testresult${/}${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Clean Excel    Data_ID.xlsx

@@ -4,8 +4,8 @@ Library    RPA.Browser.Selenium
 Library    RPA.Excel.Files
 Library    String
 Library    RPA.FileSystem
-Resource         ../keywords/keywords.robot${/}
-Resource         ../keywords/Variables.robot${/}
+Resource         ..${/}keywords${/}keywords.robot
+Resource         ..${/}keywords${/}Variables.robot
 
 
 *** Variables ***
@@ -326,7 +326,7 @@ Determine Report
 Smoke_WEB_MED_006_NEWREPORT
     [Documentation]    煙霧測試:醫療院所阿米巴性痢疾通報
     [Tags]    Smoke
-    [Setup]    Set Global Variable    ${screenshot}    testresult/${TEST_NAME}${/}
+    [Setup]    Set Global Variable    ${screenshot}    testresult${/}${TEST_NAME}
     
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}
     Clean Excel    Data_ID.xlsx

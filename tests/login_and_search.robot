@@ -4,8 +4,8 @@ Library          RPA.Browser.Selenium
 Library          RPA.Excel.Files
 Library          RPA.FileSystem
 Library    webdriver.py
-Resource         ../keywords/keywords.robot${/}
-Resource         ../keywords/Variables.robot${/}
+Resource         ..${/}keywords${/}keywords.robot
+Resource         ..${/}keywords${/}Variables.robot
 
 *** Variables ***
 ${screenshot}
@@ -14,7 +14,7 @@ ${test_result}    ${False}
 
 *** Keywords ***
 Read Excel
-    Open Workbook    ./testdata/robot_CDC_NIDRS_login.xlsx${/}
+    Open Workbook    .${/}testdata${/}robot_CDC_NIDRS_login.xlsx
     ${sheet1}    Read Worksheet    name=login   header=True
     Log To Console   \r\n${sheet1}
     Close Workbook
@@ -39,7 +39,7 @@ Report Search
     Click Button    id=btn_query
     Sleep    500ms
     Wait Until Page Contains Element    id=cdcMainHeader
-    Sleep    300ms
+    Sleep    500ms
     Capture Page Screenshot    ${screenshot}/login_and_search_${element}[Num].png
     # 驗證資料?
     # 處理查無資料
@@ -55,7 +55,7 @@ Report Search
 Smoke Test Login And Query
     [Documentation]    煙霧測試:登入與通報單查詢
     [Tags]    Smoke
-    [Setup]    Set Global Variable    ${screenshot}    testresult/${TEST_NAME}${/}
+    [Setup]    Set Global Variable    ${screenshot}    testresult${/}${TEST_NAME}
 
     Open Available Browser    maximized=${True}    browser_selection=${BROWSER}    options=add_argument("--ignore-certificate-errors")
     Read Excel
